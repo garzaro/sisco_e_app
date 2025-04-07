@@ -1,16 +1,13 @@
-import React from 'react';
-
-function FormGroup({htmlFor, label, children}) {
+import React from "react";
+import styled from "styled-components";
+{/*addBreak = true* opcional = <br>*/}
+function FormGroup({htmlFor, label, children, addBreak = false}){
     return (
-        <>
-            <div className="form-group" >
-                <label htmlFor={htmlFor} className="text-success" style={{ marginTop: '-15px' }}>
-                    <br/>
-                    {label}
-                </label>
-                {children}
-            </div>
-        </>
+        <div className="form-group text-success" style={{ marginTop: '5px' }}>
+            <label htmlFor={htmlFor} className="text-success">{label}</label>
+            {children}
+            {addBreak && <br/>}
+        </div>
     );
 }
 export default FormGroup;

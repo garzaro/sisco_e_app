@@ -7,7 +7,7 @@ function MeusComponentes() {
 
     return (
         <>
-           <Login />
+           <CadastroUsuario />
         </>
     );
 }

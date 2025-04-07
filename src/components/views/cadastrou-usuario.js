@@ -10,7 +10,7 @@ function CadastroUsuario() {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [repetirSenha, setRepetirSenha] = useState("");
-{/*style={{position: 'relative', left: '300px'} style={{margin-top: '-50px'}}*/}
+
     return (
         <>
             <div className="container" style={{ paddingTop: '50px' }}>
