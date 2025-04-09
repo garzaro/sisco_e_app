@@ -7,7 +7,7 @@ const Navbar = () => {
         <div className="navbar navbar-expand-lg navbar-dark bg-primary">{/*fixed-top*/}
             <div className="container-fluid">
 
-                <Link className="navbar-brand" to="/">Financas</Link>
+                <Link className="navbar-brand" to="/">Consulta Escolar</Link>
 
                 {/*Em telas menores, a navbar geralmente se "contrai"
                  para um botão de menu (o "toggler", menu de hamburger)

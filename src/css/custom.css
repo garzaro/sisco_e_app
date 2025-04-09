@@ -349,6 +349,9 @@ pre{
 .inputPlaceholder::placeholder {
     color: #ccc;
 }
+.esqueceu-senha{
+    color: #f49c9c;
+}
 
 /*APROXIMAR CAMPOS DO FORMULARIO*/
 
@@ -368,4 +371,7 @@ pre{
 /*asterisco vemelho no form de cadastro de usuario*/
 .asterisco-vermelho {
     color: red;
+}
+.validateFormLogin{
+    color: #f49c9c;
 }

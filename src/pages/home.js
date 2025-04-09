@@ -23,8 +23,8 @@ function Home () {
         <div className="container ">
             <div className="jumbotron ">
                 <h1 className="display-5">Bem-vindo à Página Inicial!!!</h1>
-                <p className="lead">Este é o seu sistema de finanças pessoais.</p>
-                <p className="lead">Seu saldo para o mes atual é de R$ {saldo}.</p>
+                <p className="lead">Este é o seu sistema de consulta escolar.</p>
+                <p className="lead">Quantidade de escolas cadastradas {saldo}.</p>
                 <hr className="my-4"/>
                 <p>Essa é a sua área administrativa.</p>
                 <p className="lead">
@@ -32,7 +32,7 @@ function Home () {
                        href="https://www.geeksforgeeks.org/reactjs-usenavigate-hook/"
                        role="button"><i className="fa fa-users"></i>Cadastrar Usuário</a>
                     <a className="btn btn-danger btn-lg " href="https://bootswatch.com/flatly/#" role="button"><i
-                        className="fa fa-users"></i> Cadastrar Lançamento</a>
+                        className="fa fa-users"></i> Cadastrar Escola</a>
                 </p>
             </div>
         </div>
