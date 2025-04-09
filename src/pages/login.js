@@ -14,14 +14,14 @@ const LoginForm = () => {
         formState: { errors }
     } = useForm();
     const [backendError, setBackendError] = useState(null);
-    const [isServerOffline, setIsServerOffline] = useState(false);
+    const [isServidorOffline, setIsServidorOffline] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const fazerLogin = async (data) => {
         setIsLoading(true);
         setBackendError(null);
-        setIsServerOffline(false);
+        setIsServidorOffline(false);
 
         try {
             await axios.post("http://localhost:8080/api/usuarios/autenticar", {
@@ -35,7 +35,7 @@ const LoginForm = () => {
                 setBackendError(err.response.data.message || err.response.data);
             } else {
                 /*Servidor offline*/
-                setIsServerOffline(true);
+                setIsServidorOffline(true);
                 navigate("/erro-conexao");
             }
         } finally {
