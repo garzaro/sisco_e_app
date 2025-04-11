@@ -375,3 +375,6 @@ pre{
 .validateFormLogin{
     color: #f49c9c;
 }
+.fade-out {
+    opacity: 0;
+}
