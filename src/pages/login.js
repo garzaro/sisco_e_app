@@ -5,6 +5,7 @@ import Card from "../components/card/card";
 import FormGroup from "../components/form/form-group";
 import axios from "axios";
 import AutoDismissAlert from "../components/erro/autoDismissAlert";
+import {toast} from "react-toastify";
 
 /*ver esse questao dos campos controlados  e react hook form - nao pode usar os dois juntos -
 * ver essa expçicacao https://chatgpt.com/c/67f695c9-c94c-8013-851b-33a2dbdcd8ff */
@@ -15,6 +16,7 @@ const LoginForm = () => {
         formState: { errors }
     } = useForm();
     const [errorLogin, setErrorLogin] = useState(null);
+    const [chaveDeAlert, setChaveDeAlert] = useState(null);
     const navigate = useNavigate();
 
     /*axios esta oculto para teste com fetch*/
@@ -29,6 +31,7 @@ const LoginForm = () => {
             })
             .catch(erro => {
                 setErrorLogin(erro.response?.data || erro.response?.message);
+                setChaveDeAlert(prev => prev +1);
             });
     };
 
@@ -43,7 +46,7 @@ const LoginForm = () => {
             setErrorLogin(erro.response.data.message || erro.response.message);
         }
     }*/
-
+    toast.error("Erro pra tudo que é canto")
     return (
         <div className="container-fluid mt-5 style={{minHeight: '0vh', display: 'flex', flexDirection: 'column', alignItens:'center'}}>}}" >
             <div className="row justify-content-center w-100" >
@@ -51,7 +54,7 @@ const LoginForm = () => {
                     <div className="bs-docs-section">
                         {/* Erros do Backend */}
                         {/*{errorLogin && <div className=" alert alert-danger">{errorLogin}</div>}*/}
-                        {errorLogin && <AutoDismissAlert message={errorLogin} type="danger" duration={3000} />}
+                        {errorLogin && <AutoDismissAlert key={chaveDeAlert} message={errorLogin} />}
 
                         <Card title="Login">
                             <div className="row">
