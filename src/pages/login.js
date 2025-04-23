@@ -16,7 +16,6 @@ const LoginForm = () => {
         formState: { errors }
     } = useForm();
     const [errorLogin, setErrorLogin] = useState(null);
-    const [chaveDeAlert, setChaveDeAlert] = useState(null);
     const navigate = useNavigate();
 
     /*axios esta oculto para teste com fetch*/
@@ -31,7 +30,6 @@ const LoginForm = () => {
             })
             .catch(erro => {
                 setErrorLogin(erro.response?.data || erro.response?.message);
-                setChaveDeAlert(prev => prev +1);
             });
     };
 
@@ -53,9 +51,7 @@ const LoginForm = () => {
                 <div className="col-md-6">
                     <div className="bs-docs-section">
                         {/* Erros do Backend */}
-                        {/*{errorLogin && <div className=" alert alert-danger">{errorLogin}</div>}*/}
-                        {errorLogin && <AutoDismissAlert key={chaveDeAlert} message={errorLogin} />}
-
+                        {errorLogin && <div className=" alert alert-danger">{errorLogin}</div>}
                         <Card title="Login">
                             <div className="row">
                                 <div className="col-lg-12">
