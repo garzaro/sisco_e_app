@@ -4,11 +4,8 @@ import { useNavigate } from "react-router-dom";
 import Card from "../components/card/card";
 import FormGroup from "../components/form/form-group";
 import axios from "axios";
-import AutoDismissAlert from "../components/erro/autoDismissAlert";
 import {toast} from "react-toastify";
 
-/*ver esse questao dos campos controlados  e react hook form - nao pode usar os dois juntos -
-* ver essa expçicacao https://chatgpt.com/c/67f695c9-c94c-8013-851b-33a2dbdcd8ff */
 const LoginForm = () => {
     const {
         register,
@@ -18,14 +15,14 @@ const LoginForm = () => {
     const [errorLogin, setErrorLogin] = useState(null);
     const navigate = useNavigate();
 
-    /*axios esta oculto para teste com fetch*/
-    const fazerLogin = (data) => {
+    const fazerLogin = async (data) => {
         axios
             .post("http://localhost:8080/api/usuarios/autenticar", {
                 email: data.email,
                 senha: data.senha
             })
             .then(response => {
+                //localStorage.setItem("_usuario_logado", response.data);
                 setTimeout(() => navigate("/home"), 2000);
             })
             .catch(erro => {
