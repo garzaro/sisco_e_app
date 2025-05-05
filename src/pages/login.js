@@ -1,33 +1,28 @@
-import { useState } from "react";
+import {useMemo, useState} from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Card from "../components/card/card";
 import FormGroup from "../components/form/form-group";
-import axios from "axios";
+import UsuarioService from "../app/service/usuarioService";
 import {toast} from "react-toastify";
 
 const LoginForm = () => {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors }
-    } = useForm();
+    const { register, handleSubmit, formState: { errors }} = useForm();
     const [errorLogin, setErrorLogin] = useState(null);
     const navigate = useNavigate();
+    const usuarioService = UsuarioService();
 
-    const fazerLogin = async (data) => {
-        axios
-            .post("http://localhost:8080/api/usuarios/autenticar", {
-                email: data.email,
-                senha: data.senha
-            })
-            .then(response => {
-                //localStorage.setItem("_usuario_logado", response.data);
-                setTimeout(() => navigate("/home"), 2000);
-            })
-            .catch(erro => {
-                setErrorLogin(erro.response?.data || erro.response?.message);
-            });
+    const fazerLogin = (data) => {
+        usuarioService.autenticar({
+            email: data.email,
+            senha: data.senha,
+        })
+          .then(response => {
+              setTimeout(() => navigate("/home"), 2000);
+        })
+          .catch(erro => {
+              setErrorLogin(erro.response?.data || erro.response?.message);
+        });
     };
 
     /*const fazerLogim = async (dadosLogin) => {
