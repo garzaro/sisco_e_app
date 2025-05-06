@@ -1,12 +1,14 @@
-import {useMemo, useState} from "react";
+import {useState} from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Card from "../components/card/card";
 import FormGroup from "../components/form/form-group";
+import {mensagemDeErro} from "../components/toastr";
 import UsuarioService from "../app/service/usuarioService";
-import {toast} from "react-toastify";
 
-const LoginForm = () => {
+function LoginForm () {
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
     const { register, handleSubmit, formState: { errors }} = useForm();
     const [errorLogin, setErrorLogin] = useState(null);
     const navigate = useNavigate();
@@ -16,15 +18,19 @@ const LoginForm = () => {
         usuarioService.autenticar({
             email: data.email,
             senha: data.senha,
-        })
-          .then(response => {
-              setTimeout(() => navigate("/home"), 2000);
-        })
-          .catch(erro => {
-              setErrorLogin(erro.response?.data || erro.response?.message);
+        }).then(response => {
+            setTimeout(() => navigate("/home"), 2000);
+        }).catch(erro => {
+            //setErrorLogin(erro.response?.data || erro.response?.message);
+            mensagemDeErro(erro.response.data);
         });
     };
-
+    function handleCancelar(){
+        navigate("/login");
+    }
+    function handleAvancar(){
+        navigate("/login");
+    }
     /*const fazerLogim = async (dadosLogin) => {
         try{
             await axios.post("http://localhost:8080/api/usuarios/autenticar",{
@@ -36,7 +42,7 @@ const LoginForm = () => {
             setErrorLogin(erro.response.data.message || erro.response.message);
         }
     }*/
-    toast.error("Erro pra tudo que é canto")
+    //toast.error("Erro pra tudo que é canto")
     return (
         <div className="container-fluid mt-5 style={{minHeight: '0vh', display: 'flex', flexDirection: 'column', alignItens:'center'}}>}}" >
             <div className="row justify-content-center w-100" >
