@@ -21,12 +21,15 @@ toastr.options = {
 export function mostrarMensagemDeErro(titulo, mensagem, tipo) {
     toastr[tipo](mensagem, titulo);
 }
+
 export function mensagemDeErro(mensagem) {
     mostrarMensagemDeErro('Erro ao fazer login! ', mensagem, 'error');
 }
+
 export function mensagemDeSucesso(mensagem) {
     mostrarMensagemDeErro('Sucesso', mensagem, 'success');
 }
+
 export function mensagemDeAlert(mensagem) {
     mostrarMensagemDeErro('Alerta', mensagem, 'warning');
 }
