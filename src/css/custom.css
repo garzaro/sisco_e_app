@@ -372,6 +372,13 @@ pre{
 .asterisco-vermelho {
     color: red;
 }
+
+/*FEEDBACK DE ERRO SERVIDOR*/
+.error, .error-backend {
+    color: red;
+    font-size: 14px;
+    margin-top: 4px;
+}
 .validateFormLogin{
     color: #f49c9c;
 }

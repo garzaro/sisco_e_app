@@ -7,9 +7,6 @@ const ServiceUsuario = () =>{
         autenticar: (credenciais) => {
             return usuarioApi.post('autenticar', credenciais);
         },
-        salvarUsuario: (usuarios) => {
-            return usuarioApi.post(`/`, usuarios);
-        }
     };
 };
 export default ServiceUsuario;
