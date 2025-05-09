@@ -7,7 +7,6 @@ export const httpClient = axios.create({
 const ApiService = (apiurl) => {
     return {
         apiurl: apiurl,
-        /*metodos*/
         post: (url, objeto) => {
             const requestUrl = `${apiurl}${url}`;
             return httpClient.post(requestUrl, objeto);
@@ -16,14 +15,14 @@ const ApiService = (apiurl) => {
             const requestUrl = `${apiurl}${url}`;
             return httpClient.put(requestUrl, objeto);
         },
+        delete: (url) => {
+            const requestUrl = `${apiurl}${url}`;
+            return httpClient.delete(requestUrl);
+        },
         get: (url) => {
             const requestUrl = `${apiurl}${url}`;
             return httpClient.get(requestUrl);
         },
-        delete: (url) => {
-            const requestUrl = `${apiurl}${url}`;
-            return httpClient.delete(requestUrl);
-        }
     }
 }
 export default ApiService;

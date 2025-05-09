@@ -18,7 +18,8 @@
     "react-toastify": "^11.0.5",
     "stream-browserify": "^3.0.0",
     "styled-components": "^6.1.15",
-    "toastr": "^2.1.4"
+    "toastr": "^2.1.4",
+    "yarn": "^1.22.22"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -46,5 +47,9 @@
   },
   "devDependencies": {
     "react-app-rewired": "^2.2.1"
-  }
+  },
+  "main": "index.js",
+  "repository": "https://github.com/garzaro/sisco_e_app.git",
+  "author": "garzaro <clebergarzaro74@gmail.com>",
+  "license": "MIT"
 }

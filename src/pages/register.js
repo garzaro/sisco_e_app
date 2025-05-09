@@ -1,30 +1,41 @@
 import React, {useState} from 'react';
 import Card from '../components/card/card';
 import FormGroup from "../components/form/form-group";
-
-import Astered from "../css/atered";
+import UsuarioService from "../app/service/usuarioService";
+import {mensagemDeErro, mensagemDeSucesso} from '../components/toastr';
+import Astered from "../css/astered";
 import {useNavigate} from "react-router-dom";
-
 import styled from "styled-components";
 
-/*pagina de cadastro de usuarios*/
-function Register () {
-    /*estados para armazenamento e status de carregamento, e erro*/
-    const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
-    /*tratamento de erros - mensagens do login*/
-    const [mensagensDeAlerta, setMensagensDeAlerta] = useState('');
-    //const [loading, setLoading] = useState(false); /*ver sobre*/
 
+function Register () {
+    const [nomeCompleto, setNomeCompleto] = useState('');
+    const [cpf, setCpf] = useState('');
+    const [nomeUsuario, setNomeUsuario] = useState('');
+    const [email, setEmail] = useState('');
     const navigate = useNavigate();
+    const usuarioService = UsuarioService();
+
+    const cadastrarUsuario = (data) => {
+        usuarioService.cadastrar({
+            nomeCompleto: data.nomeCompleto,
+            cpf: data.cpf,
+            nomeUsuario: data.nomeUsuario,
+            email: data.email,
+        }).then(response => {
+            mensagemDeSucesso(response.data.message);
+            setTimeout(() => navigate("/login"), 2000);
+        }).catch(err => {
+            mensagemDeErro(err.response.data);
+        });
+    }
+    function handleAvancar() {
+        navigate('/definirsenha');
+    }
 
     function handleCancelar() {
         navigate('/Login');
     }
-
-    /* const AsteriscoVermelho = styled.span`
-         color: red;
-     `;*/
     return (
         <div className="container-fluid mt-5 style={{minHeight: '0vh', display: 'flex', alignItems: 'center'">
             <div className="row justify-content-center w-100">
@@ -95,7 +106,7 @@ function Register () {
                                                        placeholder="Confirme o email"
                                                 />
                                             </FormGroup>
-                                            <button type="submit" className="btn btn-success mt-3">Confirmar</button>
+                                            <button type="submit" className="btn btn-success mt-3" onClick={handleAvancar}>Avançar</button>
                                             &nbsp;&nbsp;
                                             <button type="button" className="btn btn-danger mt-3" onClick={handleCancelar}>Cancelar</button>
                                         </fieldset>
