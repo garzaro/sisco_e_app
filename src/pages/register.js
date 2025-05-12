@@ -5,23 +5,17 @@ import UsuarioService from "../app/service/usuarioService";
 import {mensagemDeErro, mensagemDeSucesso} from '../components/toastr';
 import Astered from "../css/astered";
 import {useNavigate} from "react-router-dom";
-import styled from "styled-components";
-
 
 function Register () {
-    const [nomeCompleto, setNomeCompleto] = useState('');
-    const [cpf, setCpf] = useState('');
-    const [nomeUsuario, setNomeUsuario] = useState('');
-    const [email, setEmail] = useState('');
+    const [dadosDoUsuario, setDadosDoUsuario] = useState({
+        nome:'', cpf:'', usuario:'', email:'',
+    });
     const navigate = useNavigate();
     const usuarioService = UsuarioService();
 
     const cadastrarUsuario = (data) => {
         usuarioService.cadastrar({
-            nomeCompleto: data.nomeCompleto,
-            cpf: data.cpf,
-            nomeUsuario: data.nomeUsuario,
-            email: data.email,
+
         }).then(response => {
             mensagemDeSucesso(response.data.message);
             setTimeout(() => navigate("/login"), 2000);
