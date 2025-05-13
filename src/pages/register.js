@@ -1,19 +1,29 @@
 import React, {useState} from 'react';
-import Card from '../components/card/card';
+import {useForm} from "react-hook-form";
 import FormGroup from "../components/form/form-group";
 import UsuarioService from "../app/service/usuarioService";
 import {mensagemDeErro, mensagemDeSucesso} from '../components/toastr';
 import Astered from "../css/astered";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import Layout from "../components/layout/layout";
+import FormLayout from "../components/form/form-layout";
+import {ConfirmaEmail} from "../components/utils/validacao";
 
 function Register () {
-    const [dadosDoUsuario, setDadosDoUsuario] = useState({
-        nome:'', cpf:'', usuario:'', email:'',
-    });
+    const [name, setName] = useState('');
+    const [cpf, setCPF] = useState('');
+    const [usuario, setUsuario] = useState('');
+    const [email, setEmail] = useState('');
+    const [emailConfirmacao, setEmailConfirmacao] = useState('');
+    const {validarEmail} = ConfirmaEmail();
+    const [isSaving, setIsSaving] = useState(false)
+    const { register, handleSubmit, watch, formState: { errors }} = useForm();
     const navigate = useNavigate();
     const usuarioService = UsuarioService();
 
     const cadastrarUsuario = (data) => {
+        /*para validação de confirmação de email*/
+        const email = watch("email");
         usuarioService.cadastrar({
 
         }).then(response => {
@@ -31,87 +41,88 @@ function Register () {
         navigate('/Login');
     }
     return (
-        <div className="container-fluid mt-5 style={{minHeight: '0vh', display: 'flex', alignItems: 'center'">
-            <div className="row justify-content-center w-100">
-                <div className="col-md-6" style={{ marginTop: '-30px' }}> {/*style={{ marginTop: '-120px' }}*/}
-                    <div className="bs-docs-section">
-                        <Card title="Cadastro de Usuário">
-                            <div className="row justify-content-center align-items-center">
-                                <div className="col-md-10">
-                                    <div className="bs-component">
-                                        <fieldset className="fieldset-sm">
-                                            <FormGroup label={
-                                                <span>
-                                                Nome Completo: <Astered>*</Astered>
-                                                </span>
-                                            } name="nome-completo">
-                                                <input type="text"
-                                                       className="form-control form-control-sm inputPlaceholder"
-                                                       id="nome-completo"
-                                                       placeholder="Digite seu nome"
-                                                />
-                                            </FormGroup>
-
-                                            <FormGroup label={
-                                                <span>
-                                                Cadastro Pessoa Física: <Astered>*</Astered>
-                                            </span>
-                                            } name="cpf">
-                                                <input type="text"
-                                                       className="form-control form-control-sm inputPlaceholder"
-                                                       id="cpf"
-                                                       placeholder="Digite seu nome cpf"
-                                                />
-                                            </FormGroup>
-
-                                            <FormGroup label={
-                                                <span>
-                                                Nome de Usuário: <Astered>*</Astered>
-                                            </span>
-                                            } name="nome-usuario">
-                                                <input type="text"
-                                                       className="form-control form-control-sm inputPlaceholder"
-                                                       id="nome-usuario"
-                                                       placeholder="Nome de usuário"
-                                                />
-                                            </FormGroup>
-
-                                            <FormGroup label={
-                                                <span>
-                                                Email: <Astered>*</Astered>
-                                            </span>
-                                            } name="email">
-                                                <input type="email"
-                                                       className="form-control form-control-sm inputPlaceholder"
-                                                       id="email"
-                                                       placeholder="Digite o email"
-                                                />
-                                            </FormGroup>
-
-                                            {/*repetir*/}
-                                            <FormGroup label={
-                                                <span>
-                                                Confirmar Email: <Astered>*</Astered>
-                                            </span>
-                                            } name="confirmar-email">
-                                                <input type="email"
-                                                       className="form-control form-control-sm inputPlaceholder"
-                                                       id="repetir-email"
-                                                       placeholder="Confirme o email"
-                                                />
-                                            </FormGroup>
-                                            <button type="submit" className="btn btn-success mt-3" onClick={handleAvancar}>Avançar</button>
-                                            &nbsp;&nbsp;
-                                            <button type="button" className="btn btn-danger mt-3" onClick={handleCancelar}>Cancelar</button>
-                                        </fieldset>
+        <Layout>
+            <div className="container">
+                <div className="row">
+                    <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
+                        <div className="card border-0 shadow rounded-3 my-5">
+                            <div className="card-body p-4 p-sm-5">
+                                <h5 className="card-title text-center mb-5 fw-light fs-5">Criar nova conta</h5>
+                                <form>
+                                    {/*campo nome completo*/}
+                                    <div className="form-floating mb-3">
+                                        <input
+                                            {...register("nomeCompleto", {required: "O nome completo é obrigatório"})}
+                                            type="text"
+                                            className="form-control "
+                                            id="floatingInput"
+                                            placeholder="Nome Completo"
+                                        />
+                                        <label htmlFor="floatingInput">Nome completo<span className="asterisco-vermelho">*</span></label>
                                     </div>
-                                </div>
+                                    {/*campo cpf*/}
+                                    <div className="form-floating mb-3">
+                                        <input
+                                            {...register("cpf", {required: "O cpf é obrigatório"})}
+                                            type="number"
+                                            className="form-control"
+                                            id="floatingInput"
+                                            placeholder="CPF"
+                                        />
+                                        <label htmlFor="floatingInput">Cadastro Pessoa Física<span className="asterisco-vermelho">*</span></label>
+                                    </div>
+                                    {/*campo nome de usuario*/}
+                                    <div className="form-floating mb-3">
+                                        <input
+                                            {...register("nomeUsuario", {required: "O nome de usuario é obrigatório"})}
+                                            type="r"
+                                            className="form-control"
+                                            id="floatingInput"
+                                            placeholder="Nome de usuario"
+                                        />
+                                        <label htmlFor="floatingInput">Nome de usuario<span className="asterisco-vermelho">*</span></label>
+                                    </div>
+                                    {/*campo email*/}
+                                    <div className="form-floating mb-3">
+                                        <input
+                                            {...register("email", {required: "O email é obrigatório"})}
+                                            type="r"
+                                            className="form-control"
+                                            id="floatingInput"
+                                            placeholder="Email"
+                                        />
+                                        <label htmlFor="floatingInput">Email<span className="asterisco-vermelho">*</span></label>
+                                    </div>
+                                    {/*campo confirmar email*/}
+                                    <div className="form-floating mb-3">
+                                        <input
+                                            {...register("emailConfirmacao", {required: "Confirmação de email é obrigatório"})}
+                                            type="email"
+                                            className="form-control"
+                                            id="floatingInput"
+                                            placeholder="Email"
+                                        />
+                                        <label htmlFor="floatingInput">Email<span className="asterisco-vermelho">*</span></label>
+                                    </div>
+                                    {/*botão*/}
+                                    <div className="d-grid">
+                                        <button
+                                            className="btn btn-primary btn-login text-uppercase fw-bold"                                            onClick={cadastrarUsuario}>
+                                            Cadastrar
+                                        </button>
+                                    </div>
+                                    <hr className="my-4"></hr>
+                                    {/* Botão de Login */}
+                                    <div className="d-grid">
+                                        <Link className="btn btn-outline-primary btn-login text-uppercase" to="/login">Log in</Link>
+                                    </div>
+                                </form>
                             </div>
-                        </Card>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </Layout>
     );
 };
 export default Register;

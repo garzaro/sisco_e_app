@@ -44,8 +44,8 @@ const DefinirSenha = () => {
     };
 
     return (
-        <div className="container-fluid mt-5 style={{minHeight: '0vh', display: 'flex', alignItems: 'center'">
-            <div className="row justify-content-center w-100">
+        <div className="container">
+            <div className="row">
                 <div className="col-md-6" style={{marginTop: '-30px'}}> {/*style={{ marginTop: '-120px' }}*/}
                     <div className="bs-docs-section">
                         {/*erro do backend*/}
