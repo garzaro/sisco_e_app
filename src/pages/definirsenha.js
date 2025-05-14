@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {useForm} from "react-hook-form";
-import {useLocation, useNavigate} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import Card from "../components/card/card";
 import FormGroup from "../components/form/form-group";
 import ServiceUsuario from "../app/service/usuarioService";
@@ -33,7 +33,7 @@ function Definirsenha () {
             mensagemDeSucesso('Cadastro realizado com sucesso!');
             navigate('/login');
         }).catch(err => {
-            mensagemDeErro(err.response.data);
+            mensagemDeErro(err.response?.data);
         });
 
         // Validador customizado para a senha
@@ -44,6 +44,9 @@ function Definirsenha () {
         };
 
     };
+    function handleCancelar() {
+        navigate('/login');
+    }
 
     return (
         <div className="container-fluid mt-5 style={{minHeight: '0vh', display: 'flex', alignItems: 'center'">
@@ -66,7 +69,7 @@ function Definirsenha () {
                                                     <input
                                                         type="password"
                                                         {...register("senha", {required: "Digite sua senha"})}
-      continuar com validar s duas senha                                                  className="form-control form-control-sm inputPlaceholder"
+                                                        className="form-control form-control-sm inputPlaceholder"
                                                         placeholder="Digite a senha"
                                                         id="senha-id"
                                                     />
@@ -106,8 +109,13 @@ function Definirsenha () {
 
                                                 {/* Botão de Login */}
                                                 <button type="submit"
-                                                        className="btn btn-success btn-sm mt-3 ">
+                                                        className="btn btn-success btn-sm mt-3 text-uppercase fw-bold">
                                                     Cadastrar
+                                                </button>
+                                                {/* Botão de Login */}
+                                                <button
+                                                    type="submit" className="btn btn-success btn-sm mt-3 text-uppercase fw-bold"
+                                                    onClick={handleCancelar}>Cancelar
                                                 </button>
                                             </fieldset>
                                         </form>

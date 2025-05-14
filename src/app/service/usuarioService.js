@@ -1,20 +1,20 @@
 import Apiservice from "../apiservice";
 
-const usuarioApi = Apiservice('/api/usuarios/');
+const usuarioApi = Apiservice('/api/usuarios');
 
 const ServiceUsuario = () =>{
     return{
         autenticar: (credenciais) => {
-            return usuarioApi.post('autenticar', credenciais);
+            return usuarioApi.post('/autenticar', credenciais);
         },
-        cadastrar: (usuario) => {
-            return usuarioApi.post('/', usuario);
+        cadastrar: (usuarios) => {
+            return usuarioApi.post('', usuarios);
         },
-        atualizar: (usuario) => {
-            return usuarioApi.put('atualizar', usuario);
+        atualizar: (usuarios) => {
+            return usuarioApi.put('/atualizar', usuarios);
         },
         deletar: (id) => {
-            return usuarioApi.delete(`deletar/${id}`);
+            return usuarioApi.delete(`/deletar/${id}`);
         },
     };
 };

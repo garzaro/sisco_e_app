@@ -108,16 +108,16 @@ function Register () {
                                                 <span>
                                                     Repetir Email:<span className="asterisco-vermelho">*</span>
                                                 </span>
-                                            } name={"repetir"}>
+                                            }>
                                                 {/* Campo E-mail */}
                                                 <input
                                                     type="email"
-                                                    {...register("repetir", {required: "Repetir e-mail é obrigatório"})}
+                                                    {...register("confirmarEmail", {required: "Confirmar e-mail é obrigatório"})}
                                                     className="form-control form-control-sm inputPlaceholder"
                                                     placeholder="Digite seu email"
-                                                    id="repetir-email"
+                                                    id="confirmar-email"
                                                 />
-                                                {errors.repetir && <span className="error">{errors.repetir.message}</span>}
+                                                {errors.confirmarEmail && <span className="error">{errors.confirmarEmail.message}</span>}
                                             </FormGroup>
                                             {/* Botão de Login */}
                                             <button type="submit" className="btn btn-success btn-sm mt-3 ">
