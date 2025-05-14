@@ -47,7 +47,7 @@ function LoginForm () {
                                                     {...register("email", {required: "O e-mail é obrigatório"})}
                                                     type="email"
                                                     className="form-control"
-                                                    id="floatingInput"
+                                                    id="floatingInputEmail"
                                                     placeholder="Digite o email"
                                                     />
                                                     <label className="floatingInput">Digite o e-mail<span className="asterisco-vermelho">*</span></label>
@@ -59,7 +59,7 @@ function LoginForm () {
                                                     {...register("senha", {required: "A senha é obrigatória"})}
                                                     type="password"
                                                     className="form-control"
-                                                    id="floatingInput"
+                                                    id="floatingInputSenha"
                                                     placeholder="Digite a senha"
                                                 />
                                                 <label className="floatingInput">Digite a senha<span className="asterisco-vermelho">*</span></label>
