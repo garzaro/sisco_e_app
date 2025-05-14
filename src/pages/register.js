@@ -10,7 +10,19 @@ import FormLayout from "../components/form/form-layout";
 import {ConfirmaEmail} from "../components/utils/validacao";
 
 function Register () {
-    const { register, handleSubmit, formState: { errors }} = useForm();
+    const [senhaConfirmacao, setSenhaConfirmacao] = useState('');
+    const { register, handleSubmit, formState: { errors }} = useForm({
+        mode: 'onChange',
+        defaultValues:{
+            nomeCompleto: '',
+            cadastroPessoaFisica: '',
+            nomeUsuario: '',
+            email: '',
+            emailConfirmacao: '',
+            senha: '',
+            senhaConfirmacao: ''
+        }
+    });
     const navigate = useNavigate();
     const usuarioService = UsuarioService();
 
@@ -20,13 +32,11 @@ function Register () {
             cadastroPessoaFisica: data.cadastroPessoaFisica,
             nomeUsuario: data.nomeUsuario,
             email: data.email,
-            emailConfirmacao: data.emailConfirmacao,
             senha: data.senha,
-            senhaConfirmacao: data.senhaConfirmacao,
         }
-        usuarioService.salvar({
-            dadosCompletoUsuario,
-        }).then(response => {
+        usuarioService.salvar(dadosCompletoUsuario)
+        .then(response => {
+            console.log(response);
             mensagemDeSucesso('Usuário cadastrado com sucesso! Agora você pode fazer login.');
             setTimeout(() => navigate("/login"), 2000);
         }).catch(err => {
@@ -45,24 +55,24 @@ function Register () {
             <div className="container">
                 <div className="row">
                     <div className="col-sm-8 col-md-7 col-lg-6 mx-auto ">
-                        <div className="card border-0 shadow rounded-3 my-5">
+                        <div className="card border-0 shadow rounded-3 my-1">
                             <div className="card-body p-4 p-sm-5">
-                                <h5 className="card-title text-center mb-5 fw-light fs-5">Criar nova conta</h5>
-                                <form onSubmit={handleSubmit(onsubmit)}>
+                                <h5 className="card-title text-center mb-1 fw-light fs-6">Criar nova conta</h5>
+                                <form onSubmit={cadastrarUsuario}>
                                     {/*campo nome completo*/}
-                                    <div className="form-floating mb-3">
+                                    <div className="form-floating mb-2">
                                         <input
                                             {...register("nomeCompleto", {required: "O nome completo é obrigatório"})}
                                             type="text"
-                                            className="form-control "
+                                            className="form-control"
                                             id="floatingInputNome"
                                             placeholder="Nome Completo"
                                         />
                                         <label className="">Nome completo<span className="asterisco-vermelho">*</span></label>
-                                        {errors.nomeCompleto && <span className="error">{errors.nomeCompleto.message}</span>}
+                                        {errors.nome && <span className="error">{errors.nome.message}</span>}
                                     </div>
                                     {/*campo cpf*/}
-                                    <div className="form-floating mb-3">
+                                    <div className="form-floating mb-2">
                                         <input
                                             {...register("cadastroPessoaFisica", {required: "O cpf é obrigatório"})}
                                             type="number"
@@ -74,7 +84,7 @@ function Register () {
                                         {errors.cadastroPessoaFisica && <span className="error">{errors.cadastroPessoaFisica.message}</span>}
                                     </div>
                                     {/*campo nome de usuario*/}
-                                    <div className="form-floating mb-3">
+                                    <div className="form-floating">
                                         <input
                                             {...register("nomeUsuario", {required: "O nome de usuario é obrigatório"})}
                                             type="r"
@@ -88,7 +98,7 @@ function Register () {
                                     <hr className="my-4"></hr>
                                     {/*campo email*/}
                                     <div className="row">
-                                        <div className="col-md-6 mb-3">
+                                        <div className="col-md-6 mb-1">
                                             <div className="form-floating">
                                                 <input
                                                     {...register("email", {required: "O email é obrigatório"})}
@@ -102,8 +112,8 @@ function Register () {
                                             </div>
                                         </div>
                                         {/*campo confirmar email*/}
-                                        <div className="col-md-6 mb-3">
-                                            <div className="form-floating mb-3">
+                                        <div className="col-md-6 mb-1">
+                                            <div className="form-floating ">
                                                 <input
                                                     {...register("emailConfirmacao", {required: "Confirmação de email é obrigatório"})}
                                                     type="email"
@@ -118,7 +128,7 @@ function Register () {
                                     <hr className="my-4"></hr>
                                     {/*campo senha*/}
                                     <div className="row">
-                                        <div className="col-md-6 mb-3">
+                                        <div className="col-md-6 mb-2">
                                             <div className="form-floating">
                                                 <input
                                                     {...register("senha", {required: "A senha é obrigatória"})}
@@ -131,8 +141,8 @@ function Register () {
                                             </div>
                                         </div>
                                         {/*campo confirmar senha*/}
-                                        <div className="col-md-6 mb-3">
-                                            <div className="form-floating mb-3">
+                                        <div className="col-md-6 mb-1">
+                                            <div className="form-floating">
                                                 <input
                                                     {...register("senhaConfirmacao", {required: "Confirmação de senha é obrigatório"})}
                                                     type="password"
