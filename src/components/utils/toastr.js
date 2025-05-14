@@ -6,7 +6,7 @@ toastr.options = {
     "newestOnTop": false,
     "progressBar": true,
     "positionClass": "toast-top-right",
-    "preventDuplicates": false,
+    "preventDuplicates": true,
     "onclick": null,
     "showDuration": "300",
     "hideDuration": "1000",
@@ -18,15 +18,18 @@ toastr.options = {
     "hideMethod": "fadeOut"
 }
 
-export function mostrarMensagem(titulo, mensagem, tipo) {
+export function mensagens(titulo, mensagem, tipo) {
     toastr[tipo](mensagem, titulo);
 }
 export function mensagemDeErro(mensagem) {
-    mostrarMensagem('Erro ao fazer login! ', mensagem, 'error');
+    mensagens('Erro ao fazer login! ', mensagem, 'error');
+}
+export function mensagemDeErroCadastro(titulo, mensagem) {
+    mensagens('Erro de cadastro', mensagem, 'error');
 }
 export function mensagemDeSucesso(mensagem) {
-    mostrarMensagem('Sucesso', mensagem, 'success');
+    mensagens('Sucesso', mensagem, 'success');
 }
-export function mensagemDeAlert(mensagem) {
-    mostrarMensagem('Alerta', mensagem, 'warning');
+export function mensagemDeAlerta(mensagem) {
+    mensagens('Alerta', mensagem, 'warning');
 }

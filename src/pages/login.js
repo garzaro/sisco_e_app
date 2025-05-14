@@ -20,6 +20,7 @@ function LoginForm () {
             email:data.email,
             senha:data.senha,
         }).then(response => {
+            console.log(response);
             setTimeout(() => navigate("/home"), 2000);
         }).catch(err => {
             mensagemDeErro(err.response.data);

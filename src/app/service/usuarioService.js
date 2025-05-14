@@ -7,8 +7,8 @@ const ServiceUsuario = () =>{
         autenticar: (credenciais) => {
             return usuarioApi.post('/autenticar', credenciais);
         },
-        cadastrar: (usuarios) => {
-            return usuarioApi.post('', usuarios);
+        salvar: (usuario) => {
+            return usuarioApi.post('/', usuario);
         },
         atualizar: (usuarios) => {
             return usuarioApi.put('/atualizar', usuarios);
