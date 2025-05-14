@@ -30,7 +30,7 @@ function Register () {
             mensagemDeSucesso(response.data.message);
             setTimeout(() => navigate("/login"), 2000);
         }).catch(err => {
-            mensagemDeErro(err.response.data);
+            mensagemDeErro(err.response?.data);
         });
     }
     function handleAvancar() {
