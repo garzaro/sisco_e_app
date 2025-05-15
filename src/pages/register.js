@@ -41,9 +41,10 @@ function Register () {
             senha: data.senha,
         };
         /*usuarioService.salvar(dadosUsuario)*/
-        axios.post('http://localhost:8080/usuarios', dadosUsuario)
+        const con = axios.post('http://localhost:8080/api/usuarios', dadosUsuario)
 
-        .then(() => {
+
+        .then((response) => {
             /*fallback*/
             console.log(dadosUsuario);
             mensagemDeSucesso('Usuário cadastrado com sucesso! Agora você pode fazer login.');
