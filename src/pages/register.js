@@ -11,6 +11,7 @@ import Layout from "../components/layout/layout";
 import FormLayout from "../components/form/form-layout";
 import axios from "axios";
 import {handleCpfChange} from "../utils/utils";
+import Swal from "sweetalert2";
 
 function Register () {
     const [nomeCompleto, setNomeCompleto] = useState('');
@@ -38,10 +39,16 @@ function Register () {
             senha: data.senha,
         };
         usuarioService.salvar(dadosUsuario)
-        .then((response) => {
+        .then(function (response) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Cadastro realizado com sucesso!',
+                text: 'Agora você pode fazer login.',
+                showConfirmButton: false,
+                timer: 2000
+            })
             /*fallback*/
-            mensagemDeSucesso('Usuário cadastrado com sucesso! Agora você pode fazer login.');
-            setTimeout(() => navigate("/login"), 2000);
+            navigate("/login");
         }).catch((err) => {
             const msg = err.response?.data || "Erro inesperado ao cadastrar usuário";
             mensagemDeErroCadastro(msg);

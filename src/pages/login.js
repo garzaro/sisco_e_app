@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import Card from "../components/card/card";
-import FormGroup from "../components/form/form-group";
+import { useNavigate} from "react-router-dom";
 import {mensagemDeErro} from '../utils/toastr'
 import UsuarioService from "../app/service/usuarioService";
 import FormLayout from "../components/form/form-layout";
 import Layout from "../components/layout/layout";
+import Swal from "sweetalert2";
 
 function LoginForm () {
     const [email, setEmail] = useState('');
@@ -20,8 +19,16 @@ function LoginForm () {
             email:data.email,
             senha:data.senha,
         }).then(response => {
-            console.log(response);
-            setTimeout(() => navigate("/home"), 2000);
+            /*fallback*/
+            Swal.fire({
+                title: 'Login realizado com sucesso!',
+                text: 'Agora você pode fazer login.',
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+            })
+            setTimeout(navigate("/home"), 2000);
         }).catch(err => {
             mensagemDeErro(err.response.data);
         });
