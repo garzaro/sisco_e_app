@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Card from "../components/card/card";
 import FormGroup from "../components/form/form-group";
-import {mensagemDeErro} from '../components/utils/toastr'
+import {mensagemDeErro} from '../utils/toastr'
 import UsuarioService from "../app/service/usuarioService";
 import FormLayout from "../components/form/form-layout";
 import Layout from "../components/layout/layout";

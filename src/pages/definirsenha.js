@@ -4,7 +4,7 @@ import {Link, useLocation, useNavigate} from "react-router-dom";
 import Card from "../components/card/card";
 import FormGroup from "../components/form/form-group";
 import ServiceUsuario from "../app/service/usuarioService";
-import {mensagemDeErro, mensagemDeSucesso} from '../components/utils/toastr'
+import {mensagemDeErro, mensagemDeSucesso} from '../utils/toastr'
 import usuarioService from "../app/service/usuarioService";
 /*definir a senha e finalizar o cadastro*/
 function Definirsenha () {

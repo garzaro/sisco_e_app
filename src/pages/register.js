@@ -4,12 +4,13 @@ import InputMask from "react-input-mask-next";
 import Card from "../components/card/card";
 import FormGroup from "../components/form/form-group";
 import UsuarioService from "../app/service/usuarioService";
-import {mensagemDeErro, mensagemDeErroCadastro, mensagemDeSucesso} from '../components/utils/toastr';
+import {mensagemDeErro, mensagemDeErroCadastro, mensagemDeSucesso} from '../utils/toastr';
 import Astered from "../css/astered";
 import {Link, useNavigate} from "react-router-dom";
 import Layout from "../components/layout/layout";
 import FormLayout from "../components/form/form-layout";
 import axios from "axios";
+import {handleCpfChange} from "../utils/utils";
 
 function Register () {
     const [senhaConfirmacao, setSenhaConfirmacao] = useState('');
@@ -50,21 +51,10 @@ function Register () {
             mensagemDeErroCadastro(msg);
         });
     }
-    const handleCpfChange = (e) => {
-        /*remove os pontos na base de dados*/
-        let value = e.target.value.replace(/\D/g, '');
-        /*11 digitos*/
-        value = value.slice(0, 11);
-        /*primeiro ponto*/
-        value = value.replace(/(\d{3})(\d)/, '$1.$2');
-        /*segundo ponto*/
-        value = value.replace(/(\d{3})(\d)/, '$1.$2');
-        /*hifen*/
-        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-        /*define o valor no useForm*/
-        setValue('cadastroPessoaFisica', value);
-        console.log('mudou', e.target.value)
-    };
+    const cpfMask = (e) => {
+        const mascaraCpf = handleCpfChange(e.target.value);
+        setValue('cadastroPessoaFisica', mascaraCpf);
+    }
     return (
         <Layout>
             <div className="container">
@@ -110,7 +100,6 @@ function Register () {
                                         <label className="floatingInput">Cadastro Pessoa Física<span className="asterisco-vermelho">*</span></label>
                                         {errors.cadastroPessoaFisica && (<span className="error">{errors.cadastroPessoaFisica.message}</span>)}
                                     </div>*/}
-
                                     {/*campo cpf*/}
                                     <div className="form-floating mb-2">
                                         <input
@@ -120,7 +109,7 @@ function Register () {
                                             id="floatingInputCpf"
                                             {...register("cadastroPessoaFisica", {
                                                 required: "O CPF é obrigatório",
-                                                onChange: handleCpfChange, /* ✅ */
+                                                onChange: {cpfMask} /* ✅ */
                                             })}
                                         />
                                         <label htmlFor="floatingInputCpf">Cadastro Pessoa Física<span className="asterisco-vermelho">*</span></label>
