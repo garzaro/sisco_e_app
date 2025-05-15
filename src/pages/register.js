@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Controller, useForm} from "react-hook-form";
-import InputMask from "react-input-mask";
+import InputMask from "react-input-mask-next";
 import Card from "../components/card/card";
 import FormGroup from "../components/form/form-group";
 import UsuarioService from "../app/service/usuarioService";
@@ -9,15 +9,10 @@ import Astered from "../css/astered";
 import {Link, useNavigate} from "react-router-dom";
 import Layout from "../components/layout/layout";
 import FormLayout from "../components/form/form-layout";
-import {ConfirmaEmail} from "../components/utils/validacao";
-import Spinner from "../components/utils/spinner";
-import MeuSpinner from "../components/utils/spinner";
-import FeedbackDeRedirecionamento from "../components/utils/feedbackVisual";
 
 function Register () {
     const [senhaConfirmacao, setSenhaConfirmacao] = useState('');
-    const [spiner, setSpiner] = useState(false);
-    const { control, register, handleSubmit, watch, formState: { errors }} = useForm({
+    const { control, register, handleSubmit, setValue, watch, formState: { errors }} = useForm({
         mode: 'onChange',
         defaultValues:{
             nomeCompleto: '',
@@ -39,7 +34,7 @@ function Register () {
     const cadastrarUsuario = (data) => {
         const dadosUsuario = {
             nomeCompleto: data.nomeCompleto,
-            cadastroPessoaFisica: data.cadastroPessoaFisica.replace(/[^0-9]/g, ''), /*/\D/g, ''*/
+            cadastroPessoaFisica: data.cadastroPessoaFisica,
             nomeUsuario: data.nomeUsuario,
             email: data.email,
             senha: data.senha,
@@ -47,15 +42,29 @@ function Register () {
         usuarioService.salvar(dadosUsuario)
         .then(() => {
             /*fallback*/
+            console.log(dadosUsuario);
             mensagemDeSucesso('Usuário cadastrado com sucesso! Agora você pode fazer login.');
-            setSpiner(true);
-            <FeedbackDeRedirecionamento mensagem="Redirecionando para o login..."/>
             setTimeout(() => navigate("/login"), 2000);
         }).catch((err) => {
             const msg = err.response?.data || "Erro inesperado ao cadastrar usuário";
             mensagemDeErroCadastro(msg);
         });
     }
+    const handleCpfChange = (e) => {
+        /*remove os pontos na base de dados*/
+        let value = e.target.value.replace(/\D/g, '');
+        /*11 digitos*/
+        value = value.slice(0, 11);
+        /*primeiro ponto*/
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        /*segundo ponto*/
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        /*hifen*/
+        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+        /*define o valor no useForm*/
+        setValue('cadastroPessoaFisica', value);
+        console.log('mudou', e.target.value)
+    };
     return (
         <Layout>
             <div className="container">
@@ -77,7 +86,7 @@ function Register () {
                                         <label className="floatingInput">Nome completo<span className="asterisco-vermelho">*</span></label>
                                         {errors.nomeCompleto && <span className="error">{errors.nomeCompleto.message}</span>}
                                     </div>
-                                    {/*campo cpf*/}
+                                    {/*campo cpf*
                                     <div className="form-floating mb-2">
                                         <Controller
                                             name="cadastroPessoaFisica"
@@ -88,22 +97,38 @@ function Register () {
                                                 mask="999.999.999-99"
                                                 value={field.value || ""}
                                                 onChange={field.onChange}
-                                            >
-                                            {(inputProps) => (
-                                                <input
-                                                {...inputProps}
+                                                onBlur={field.onBlur}
+                                                disabled={field.disabled}
+                                                as="input"
                                                 type="text"
                                                 className={`form-control ${errors.cadastroPessoaFisica ? "is-invalid" : ""}`}
                                                 id="floatingInputCpf"
                                                 placeholder="000.000.000-00"
-                                                />
-                                            )}
-                                            </InputMask>
-                                            )}
+                                            />
+                                        )}
                                         />
                                         <label className="floatingInput">Cadastro Pessoa Física<span className="asterisco-vermelho">*</span></label>
                                         {errors.cadastroPessoaFisica && (<span className="error">{errors.cadastroPessoaFisica.message}</span>)}
+                                    </div>*/}
+
+                                    {/*campo cpf*/}
+                                    <div className="form-floating mb-2">
+                                        <input
+                                            type="text"
+                                            className={`form-control ${errors.cadastroPessoaFisica ? 'is-invalid' : ''}`}
+                                            placeholder="000.000.000-00"
+                                            id="floatingInputCpf"
+                                            {...register("cadastroPessoaFisica", {
+                                                required: "O CPF é obrigatório",
+                                                onChange: handleCpfChange, /* ✅ */
+                                            })}
+                                        />
+                                        <label htmlFor="floatingInputCpf">Cadastro Pessoa Física<span className="asterisco-vermelho">*</span></label>
+                                        {errors.cadastroPessoaFisica && (
+                                            <span className="error">{errors.cadastroPessoaFisica.message}</span>
+                                        )}
                                     </div>
+
                                     {/*campo nome de usuario*/}
                                     <div className="form-floating">
                                         <input
