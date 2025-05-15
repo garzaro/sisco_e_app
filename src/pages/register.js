@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
-import {useForm} from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
+import InputMask from "react-input-mask";
+import Card from "../components/card/card";
 import FormGroup from "../components/form/form-group";
 import UsuarioService from "../app/service/usuarioService";
 import {mensagemDeErro, mensagemDeErroCadastro, mensagemDeSucesso} from '../components/utils/toastr';
@@ -8,10 +10,14 @@ import {Link, useNavigate} from "react-router-dom";
 import Layout from "../components/layout/layout";
 import FormLayout from "../components/form/form-layout";
 import {ConfirmaEmail} from "../components/utils/validacao";
+import Spinner from "../components/utils/spinner";
+import MeuSpinner from "../components/utils/spinner";
+import FeedbackDeRedirecionamento from "../components/utils/feedbackVisual";
 
 function Register () {
     const [senhaConfirmacao, setSenhaConfirmacao] = useState('');
-    const { register, handleSubmit, formState: { errors }} = useForm({
+    const [spiner, setSpiner] = useState(false);
+    const { control, register, handleSubmit, watch, formState: { errors }} = useForm({
         mode: 'onChange',
         defaultValues:{
             nomeCompleto: '',
@@ -23,32 +29,32 @@ function Register () {
             senhaConfirmacao: ''
         }
     });
+    /*comparacao de senha*/
+    const senha = watch('senha');
+    /*comparacao de email*/
+    const email = watch('email');
     const navigate = useNavigate();
     const usuarioService = UsuarioService();
 
     const cadastrarUsuario = (data) => {
-        const dadosCompletoUsuario = {
+        const dadosUsuario = {
             nomeCompleto: data.nomeCompleto,
-            cadastroPessoaFisica: data.cadastroPessoaFisica,
+            cadastroPessoaFisica: data.cadastroPessoaFisica.replace(/[^0-9]/g, ''), /*/\D/g, ''*/
             nomeUsuario: data.nomeUsuario,
             email: data.email,
             senha: data.senha,
-        }
-        usuarioService.salvar(dadosCompletoUsuario)
-        .then(response => {
-            console.log(response);
+        };
+        usuarioService.salvar(dadosUsuario)
+        .then(() => {
+            /*fallback*/
             mensagemDeSucesso('Usuário cadastrado com sucesso! Agora você pode fazer login.');
+            setSpiner(true);
+            <FeedbackDeRedirecionamento mensagem="Redirecionando para o login..."/>
             setTimeout(() => navigate("/login"), 2000);
-        }).catch(err => {
-            mensagemDeErroCadastro(err.response?.data);
+        }).catch((err) => {
+            const msg = err.response?.data || "Erro inesperado ao cadastrar usuário";
+            mensagemDeErroCadastro(msg);
         });
-    }
-    function handleAvancar() {
-        navigate('/definirsenha');
-    }
-
-    function handleCancelar() {
-        navigate('/Login');
     }
     return (
         <Layout>
@@ -57,8 +63,8 @@ function Register () {
                     <div className="col-sm-8 col-md-7 col-lg-6 mx-auto ">
                         <div className="card border-0 shadow rounded-3 my-1">
                             <div className="card-body p-4 p-sm-5">
-                                <h5 className="card-title text-center mb-1 fw-light fs-6">Criar nova conta</h5>
-                                <form onSubmit={cadastrarUsuario}>
+                                <h3 className="card-title text-center mb-1 fw-light fs-6">Criar nova conta</h3>
+                                <form onSubmit={handleSubmit(cadastrarUsuario)}>
                                     {/*campo nome completo*/}
                                     <div className="form-floating mb-2">
                                         <input
@@ -68,20 +74,35 @@ function Register () {
                                             id="floatingInputNome"
                                             placeholder="Nome Completo"
                                         />
-                                        <label className="">Nome completo<span className="asterisco-vermelho">*</span></label>
-                                        {errors.nome && <span className="error">{errors.nome.message}</span>}
+                                        <label className="floatingInput">Nome completo<span className="asterisco-vermelho">*</span></label>
+                                        {errors.nomeCompleto && <span className="error">{errors.nomeCompleto.message}</span>}
                                     </div>
                                     {/*campo cpf*/}
                                     <div className="form-floating mb-2">
-                                        <input
-                                            {...register("cadastroPessoaFisica", {required: "O cpf é obrigatório"})}
-                                            type="number"
-                                            className="form-control"
-                                            id="floatingInputCpf"
-                                            placeholder="cpf"
+                                        <Controller
+                                            name="cadastroPessoaFisica"
+                                            control={control}
+                                            rules={{ required: "O CPF é obrigatório" }}
+                                            render={({ field }) => (
+                                            <InputMask
+                                                mask="999.999.999-99"
+                                                value={field.value || ""}
+                                                onChange={field.onChange}
+                                            >
+                                            {(inputProps) => (
+                                                <input
+                                                {...inputProps}
+                                                type="text"
+                                                className={`form-control ${errors.cadastroPessoaFisica ? "is-invalid" : ""}`}
+                                                id="floatingInputCpf"
+                                                placeholder="000.000.000-00"
+                                                />
+                                            )}
+                                            </InputMask>
+                                            )}
                                         />
                                         <label className="floatingInput">Cadastro Pessoa Física<span className="asterisco-vermelho">*</span></label>
-                                        {errors.cadastroPessoaFisica && <span className="error">{errors.cadastroPessoaFisica.message}</span>}
+                                        {errors.cadastroPessoaFisica && (<span className="error">{errors.cadastroPessoaFisica.message}</span>)}
                                     </div>
                                     {/*campo nome de usuario*/}
                                     <div className="form-floating">
@@ -144,7 +165,8 @@ function Register () {
                                         <div className="col-md-6 mb-1">
                                             <div className="form-floating">
                                                 <input
-                                                    {...register("senhaConfirmacao", {required: "Confirmação de senha é obrigatório"})}
+                                                    {...register("senhaConfirmacao",
+                                                    {validate: value => value === senha || "As senhas nao conferem"})}
                                                     type="password"
                                                     className="form-control"
                                                     id="floatingInputConfirmacaoSenha"
