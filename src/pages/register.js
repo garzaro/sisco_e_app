@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Controller, useForm} from "react-hook-form";
-import InputMask from "react-input-mask-next";
+//import InputMask from "react-input-mask-next";
 import Card from "../components/card/card";
 import FormGroup from "../components/form/form-group";
 import UsuarioService from "../app/service/usuarioService";
@@ -13,29 +13,25 @@ import axios from "axios";
 import {handleCpfChange} from "../utils/utils";
 
 function Register () {
+    const [nomeCompleto, setNomeCompleto] = useState('');
+    const [cpf, setCpf] = useState('');
+    const [nomeUsuario, setNomeUsuario] = useState('');
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
+    const [emailConfirmacao, setEmailConfirmacao] = useState('');
     const [senhaConfirmacao, setSenhaConfirmacao] = useState('');
-    const { control, register, handleSubmit, setValue, watch, formState: { errors }} = useForm({
-        mode: 'onChange',
-        defaultValues:{
-            nomeCompleto: '',
-            cadastroPessoaFisica: '',
-            nomeUsuario: '',
-            email: '',
-            emailConfirmacao: '',
-            senha: '',
-            senhaConfirmacao: ''
-        }
-    });
+
+    const { control, register, handleSubmit, setValue, watch, formState: { errors }} = useForm();
     /*comparacao de senha*/
-    const senha = watch('senha');
+    const confirmarSenha = watch('senha');
     /*comparacao de email*/
-    const email = watch('email');
+    const confirmarEmail = watch('email');
     const navigate = useNavigate();
     const usuarioService = UsuarioService();
 
     const cadastrarUsuario = (data) => {
         const dadosUsuario = {
-            nomeCompleto: data.nomeCompleto,
+            nomeCompleto: data.trimStart.nomeCompleto,
             cadastroPessoaFisica: data.cadastroPessoaFisica,
             nomeUsuario: data.nomeUsuario,
             email: data.email,
@@ -51,7 +47,7 @@ function Register () {
             mensagemDeErroCadastro(msg);
         });
     }
-    const cpfMask = (e) => {
+    const handleCpfMask = (e) => {
         const mascaraCpf = handleCpfChange(e.target.value);
         setValue('cadastroPessoaFisica', mascaraCpf);
     }
@@ -67,7 +63,9 @@ function Register () {
                                     {/*campo nome completo*/}
                                     <div className="form-floating mb-2">
                                         <input
-                                            {...register("nomeCompleto", {required: "O nome completo é obrigatório"})}
+                                            {...register("nomeCompleto", {required: "O nome completo é obrigatório",
+                                            onChange: (e) => {setNomeCompleto(e.target.value.trimStart());
+                                            }})}
                                             type="text"
                                             className="form-control"
                                             id="floatingInputNome"
@@ -109,15 +107,15 @@ function Register () {
                                             id="floatingInputCpf"
                                             {...register("cadastroPessoaFisica", {
                                                 required: "O CPF é obrigatório",
-                                                onChange: {cpfMask} /* ✅ */
+                                                onChange: (e)=> {handleCpfMask(e);} /* ✅ */
                                             })}
                                         />
-                                        <label htmlFor="floatingInputCpf">Cadastro Pessoa Física<span className="asterisco-vermelho">*</span></label>
+                                        <label htmlFor="floatingInputCpf">
+                                            Cadastro Pessoa Física<span className="asterisco-vermelho">*</span></label>
                                         {errors.cadastroPessoaFisica && (
                                             <span className="error">{errors.cadastroPessoaFisica.message}</span>
                                         )}
                                     </div>
-
                                     {/*campo nome de usuario*/}
                                     <div className="form-floating">
                                         <input
@@ -127,7 +125,8 @@ function Register () {
                                             id="floatingInputUsuario"
                                             placeholder="Nome de usuario"
                                         />
-                                        <label className="floatingInput">Nome de usuario<span className="asterisco-vermelho">*</span></label>
+                                        <label className="floatingInput">
+                                            Nome de usuario<span className="asterisco-vermelho">*</span></label>
                                         {errors.nomeUsuario && <span className="error">{errors.nomeUsuario.message}</span>}
                                     </div>
                                     <hr className="my-4"></hr>
@@ -142,21 +141,25 @@ function Register () {
                                                     id="floatingInputEmail"
                                                     placeholder="Digite o email"
                                                 />
-                                                <label className="floatingInput">Digite o email<span className="asterisco-vermelho">*</span></label>
-                                                {errors.nomeUsuario && <span className="error">{errors.nomeUsuario.message}</span>}
+                                                <label className="floatingInput">
+                                                    Digite o email<span className="asterisco-vermelho">*</span></label>
+                                                {errors.email && <span className="error">{errors.email.message}</span>}
                                             </div>
                                         </div>
                                         {/*campo confirmar email*/}
                                         <div className="col-md-6 mb-1">
                                             <div className="form-floating ">
                                                 <input
-                                                    {...register("emailConfirmacao", {required: "Confirmação de email é obrigatório"})}
+                                                    {...register("emailConfirmacao",
+                                                    {validate: value => value === email || "Os emails não conferem"})}
                                                     type="email"
                                                     className="form-control"
                                                     id="floatingInputConfirmacaoEmail"
                                                     placeholder="Confirmar email"
                                                 />
-                                                <label className="floatingInput">Confirmar email<span className="asterisco-vermelho">*</span></label>
+                                                <label className="floatingInput">
+                                                    Confirmar email<span className="asterisco-vermelho">*</span></label>
+                                                {errors.emailConfirmacao && <span className="error">{errors.emailConfirmacao.message}</span>}
                                             </div>
                                         </div>
                                     </div>
@@ -172,7 +175,9 @@ function Register () {
                                                     id="floatingInputSenha"
                                                     placeholder="Digite a senha"
                                                 />
-                                                <label className="floatingInput">Digite a senha<span className="asterisco-vermelho">*</span></label>
+                                                <label className="floatingInput">
+                                                    Digite a senha<span className="asterisco-vermelho">*</span></label>
+                                                {errors.senha && <span className="error">{errors.senha.message}</span>}
                                             </div>
                                         </div>
                                         {/*campo confirmar senha*/}
@@ -186,7 +191,9 @@ function Register () {
                                                     id="floatingInputConfirmacaoSenha"
                                                     placeholder="Confirmar a senha"
                                                 />
-                                                <label className="floatingInput">Confirmar a senha<span className="asterisco-vermelho">*</span></label>
+                                                <label className="floatingInput">
+                                                    Confirmar a senha<span className="asterisco-vermelho">*</span></label>
+                                                {errors.senhaConfirmacao && <span className="error">{errors.senhaConfirmacao.message}</span>}
                                             </div>
                                         </div>
                                     </div>
