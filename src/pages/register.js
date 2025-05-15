@@ -40,13 +40,9 @@ function Register () {
             email: data.email,
             senha: data.senha,
         };
-        /*usuarioService.salvar(dadosUsuario)*/
-        const con = axios.post('http://localhost:8080/api/usuarios', dadosUsuario)
-
-
+        usuarioService.salvar(dadosUsuario)
         .then((response) => {
             /*fallback*/
-            console.log(dadosUsuario);
             mensagemDeSucesso('Usuário cadastrado com sucesso! Agora você pode fazer login.');
             setTimeout(() => navigate("/login"), 2000);
         }).catch((err) => {
