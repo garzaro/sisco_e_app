@@ -9,6 +9,7 @@ import Astered from "../css/astered";
 import {Link, useNavigate} from "react-router-dom";
 import Layout from "../components/layout/layout";
 import FormLayout from "../components/form/form-layout";
+import axios from "axios";
 
 function Register () {
     const [senhaConfirmacao, setSenhaConfirmacao] = useState('');
@@ -39,7 +40,9 @@ function Register () {
             email: data.email,
             senha: data.senha,
         };
-        usuarioService.salvar(dadosUsuario)
+        /*usuarioService.salvar(dadosUsuario)*/
+        axios.post('http://localhost:8080/usuarios', dadosUsuario)
+
         .then(() => {
             /*fallback*/
             console.log(dadosUsuario);
