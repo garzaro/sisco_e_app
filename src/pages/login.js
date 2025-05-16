@@ -1,6 +1,6 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {mensagemDeErro} from '../utils/toastr'
 import UsuarioService from "../app/service/usuarioService";
 import FormLayout from "../components/form/form-layout";
@@ -8,8 +8,6 @@ import Layout from "../components/layout/layout";
 import Swal from "sweetalert2";
 
 function LoginForm () {
-    const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
     const { register, handleSubmit, formState: { errors }} = useForm();
     const navigate = useNavigate();
     const usuarioService = UsuarioService();
@@ -27,18 +25,19 @@ function LoginForm () {
                 showConfirmButton: false,
                 timer: 2000,
                 timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading()
+                    Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
+                    //const barraDeProgresso = Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
+                    //barraDeProgresso.style.backgroundColor = '#3498db'
+                }
             })
             setTimeout(navigate("/home"), 2000);
         }).catch(err => {
             mensagemDeErro(err.response.data);
         });
     };
-    function handleCancelar() {
-        navigate('/login');
-    }
-    function handleAvancar() {
-        navigate('/definirsenha');
-    }
+
     return (
         <>
             <Layout>
@@ -95,9 +94,12 @@ function LoginForm () {
                                                     botão abaixo, crie sua conta e obtenha acesso ao Sistema de
                                                     Consulta Escolar.
                                                 </p>
-                                                <div className="text-center">
-                                                    <a href="/register" className="btn btn-sm btn-warning"
-                                                       title="Não tem uma conta? Clique aqui!">Criar conta</a>
+                                                {/* Botão de Login */}
+                                                <div className="d-grid">
+                                                    <Link
+                                                        className="btn btn-outline-primary btn-login text-uppercase"
+                                                        to="/register">Criar conta
+                                                    </Link>
                                                 </div>
                                             </div>
                                         </form>

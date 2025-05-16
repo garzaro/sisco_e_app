@@ -1,4 +1,5 @@
 import axios from "axios";
+
 export const httpClient = axios.create({
     baseURL: 'http://localhost:8080/',
     withCredentials: true
@@ -24,9 +25,5 @@ const ApiService = (apiurl) => {
         },
     }
 }
-httpClient.interceptors.request.use(config => {
-    console.log('Enviando requisição para:', config.url);
-    return config;
-});
 export default ApiService;
 
