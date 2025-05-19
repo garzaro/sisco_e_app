@@ -14,38 +14,35 @@ import {handleCpfChange} from "../utils/utils";
 import Swal from "sweetalert2";
 
 function Register () {
-    const [nomeCompleto, setNomeCompleto] = useState('');
-    const [cpf, setCpf] = useState('');
-    const [nomeUsuario, setNomeUsuario] = useState('');
-    const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
-    const [emailConfirmacao, setEmailConfirmacao] = useState('');
-    const [senhaConfirmacao, setSenhaConfirmacao] = useState('');
-
-    const { control, register, handleSubmit, setValue, watch, formState: { errors }} = useForm();
-    /*comparacao de senha*/
-    const confirmarSenha = watch('senha');
-    /*comparacao de email*/
-    const confirmarEmail = watch('email');
+    const { control, register, handleSubmit, setValue, watch, formState: { errors }} = useForm({
+        defaultValues: {
+            nome: '', cpf: '', usuario: '', email: '', senha: '',
+            emailConfirmacao: '', senhaConfirmacao: ''
+        }
+    });
     const navigate = useNavigate();
     const usuarioService = UsuarioService();
 
     const cadastrarUsuario = (data) => {
-        const dadosUsuario = {
-            nomeCompleto: data.trimStart.nomeCompleto,
-            cadastroPessoaFisica: data.cadastroPessoaFisica,
-            nomeUsuario: data.nomeUsuario,
-            email: data.email,
-            senha: data.senha,
-        };
-        usuarioService.salvar(dadosUsuario)
+        const usuario = {
+            nome: data.nome, cpf: data.cpf, usuario: data.usuario,
+            email: data.email, senha: data.senha,
+        }
+        usuarioService.salvar(usuario)
         .then(function (response) {
             Swal.fire({
                 icon: 'success',
                 title: 'Cadastro realizado com sucesso!',
                 text: 'Agora você pode fazer login.',
                 showConfirmButton: false,
-                timer: 2000
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading()
+                    Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
+                    const barraDeProgresso = Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
+                    barraDeProgresso.style.backgroundColor = '#3498db'
+                }
             })
             /*fallback*/
             navigate("/login");
@@ -54,32 +51,34 @@ function Register () {
             mensagemDeErroCadastro(msg);
         });
     }
+    /*comparacao de senha*/
+    const confirmarSenha = watch('senha');
+    /*comparacao de email*/
+    const confirmarEmail = watch('email');
     const handleCpfMask = (e) => {
         const mascaraCpf = handleCpfChange(e.target.value);
-        setValue('cadastroPessoaFisica', mascaraCpf);
+        setValue('cpf', mascaraCpf);
     }
     return (
         <Layout>
             <div className="container">
                 <div className="row">
                     <div className="col-sm-8 col-md-7 col-lg-6 mx-auto ">
-                        <div className="card border-0 shadow rounded-3 my-1">
+                        <div className="card border-0 bg-black text-secondary shadow rounded-3 my-1">
                             <div className="card-body p-4 p-sm-5">
                                 <h3 className="card-title text-center mb-1 fw-light fs-6">Criar nova conta</h3>
                                 <form onSubmit={handleSubmit(cadastrarUsuario)}>
                                     {/*campo nome completo*/}
                                     <div className="form-floating mb-2">
                                         <input
-                                            {...register("nomeCompleto", {required: "O nome completo é obrigatório",
-                                            onChange: (e) => {setNomeCompleto(e.target.value.trimStart());
-                                            }})}
+                                            {...register("nome", {required: "O nome completo é obrigatório"},)}
                                             type="text"
                                             className="form-control"
                                             id="floatingInputNome"
                                             placeholder="Nome Completo"
                                         />
                                         <label className="floatingInput">Nome completo<span className="asterisco-vermelho">*</span></label>
-                                        {errors.nomeCompleto && <span className="error">{errors.nomeCompleto.message}</span>}
+                                        {errors.nome && <span className="error">{errors.nome.message}</span>}
                                     </div>
                                     {/*campo cpf*
                                     <div className="form-floating mb-2">
@@ -109,32 +108,31 @@ function Register () {
                                     <div className="form-floating mb-2">
                                         <input
                                             type="text"
-                                            className={`form-control ${errors.cadastroPessoaFisica ? 'is-invalid' : ''}`}
+                                            className={`form-control ${errors.cpf ? 'is-invalid' : ''}`}
                                             placeholder="000.000.000-00"
                                             id="floatingInputCpf"
-                                            {...register("cadastroPessoaFisica", {
-                                                required: "O CPF é obrigatório",
+                                            {...register("cpf", {required: "O CPF é obrigatório",
                                                 onChange: (e)=> {handleCpfMask(e);} /* ✅ */
                                             })}
                                         />
-                                        <label htmlFor="floatingInputCpf">
-                                            Cadastro Pessoa Física<span className="asterisco-vermelho">*</span></label>
-                                        {errors.cadastroPessoaFisica && (
-                                            <span className="error">{errors.cadastroPessoaFisica.message}</span>
+                                        <label className="floatingInputCpf">
+                                            Cadastro Pessoa Física<span className="asterisco-vermelho">*</span>
+                                        </label>
+                                        {errors.cpf && ( <span className="error">{errors.cpf.message}</span>
                                         )}
                                     </div>
                                     {/*campo nome de usuario*/}
                                     <div className="form-floating">
                                         <input
-                                            {...register("nomeUsuario", {required: "O nome de usuario é obrigatório"})}
-                                            type="r"
+                                            {...register("usuario", {required: "O nome de usuario é obrigatório"})}
+                                            type="text"
                                             className="form-control"
                                             id="floatingInputUsuario"
                                             placeholder="Nome de usuario"
                                         />
                                         <label className="floatingInput">
                                             Nome de usuario<span className="asterisco-vermelho">*</span></label>
-                                        {errors.nomeUsuario && <span className="error">{errors.nomeUsuario.message}</span>}
+                                        {errors.usuario && <span className="error">{errors.usuario.message}</span>}
                                     </div>
                                     <hr className="my-4"></hr>
                                     {/*campo email*/}
@@ -158,7 +156,7 @@ function Register () {
                                             <div className="form-floating ">
                                                 <input
                                                     {...register("emailConfirmacao",
-                                                    {validate: value => value === email || "Os emails não conferem"})}
+                                                    {validate: (value) => value === confirmarEmail || "Os emails não conferem"})}
                                                     type="email"
                                                     className="form-control"
                                                     id="floatingInputConfirmacaoEmail"
@@ -192,7 +190,7 @@ function Register () {
                                             <div className="form-floating">
                                                 <input
                                                     {...register("senhaConfirmacao",
-                                                    {validate: value => value === senha || "As senhas nao conferem"})}
+                                                    {validate: (value) => value === confirmarSenha || "As senhas nao conferem"})}
                                                     type="password"
                                                     className="form-control"
                                                     id="floatingInputConfirmacaoSenha"
@@ -208,7 +206,8 @@ function Register () {
                                     {/*botão*/}
                                     <div className="d-grid">
                                         <button
-                                            className="btn btn-primary btn-login text-uppercase fw-bold">
+                                            className="btn btn-primary btn-login text-uppercase fw-bold"
+                                            onClick={handleSubmit(cadastrarUsuario)}>
                                             Cadastrar
                                         </button>
                                     </div>
