@@ -41,7 +41,9 @@ function Register () {
                     Swal.showLoading()
                     Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
                     const barraDeProgresso = Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
-                    barraDeProgresso.style.backgroundColor = '#3498db'
+                    if (barraDeProgresso){
+                        barraDeProgresso.style.backgroundColor = '#3498db'
+                    }
                 }
             })
             /*fallback*/
