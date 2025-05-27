@@ -20,18 +20,16 @@ function LoginForm () {
             /*fallback*/
             Swal.fire({
                 title: 'Login realizado com sucesso!',
-                text: 'Agora você pode fazer suas pesquisas.',
+                text: 'Agora você pode fazer login.',
                 icon: 'success',
                 showConfirmButton: false,
-                timer: 2500,
+                timer: 2000,
                 timerProgressBar: true,
                 didOpen: () => {
                     Swal.showLoading()
                     Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
-                    const barraDeProgresso = Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
-                    if (barraDeProgresso){
-                        barraDeProgresso.style.backgroundColor = '#3498db'
-                    }
+                    //const barraDeProgresso = Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
+                    //barraDeProgresso.style.backgroundColor = '#3498db'
                 }
             })
             setTimeout(navigate("/home"), 2000);

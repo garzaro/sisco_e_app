@@ -1,14 +1,21 @@
-import React from 'react';
-import {useForm} from "react-hook-form";
+import React, {useState} from 'react';
+import {Controller, useForm} from "react-hook-form";
+//import InputMask from "react-input-mask-next";
+import Card from "../components/card/card";
+import FormGroup from "../components/form/form-group";
 import UsuarioService from "../app/service/usuarioService";
+import {mensagemDeErro, mensagemDeErroCadastro, mensagemDeSucesso} from '../utils/toastr';
+import Astered from "../css/astered";
 import {Link, useNavigate} from "react-router-dom";
 import Layout from "../components/layout/layout";
+import FormLayout from "../components/form/form-layout";
+import axios from "axios";
 import {handleCpfChange, validateTrim, validarTrim} from "../utils/utils";
 import Swal from "sweetalert2";
 
 
 function Register () {
-    const { register, handleSubmit, setValue, watch, formState: { errors }} = useForm({
+    const { control, register, handleSubmit, setValue, watch, formState: { errors }} = useForm({
         defaultValues: {
             nome: '', cpf: '', usuario: '', email: '', senha: '',
             emailConfirmacao: '', senhaConfirmacao: ''
