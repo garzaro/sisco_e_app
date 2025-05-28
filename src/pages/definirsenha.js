@@ -1,132 +1,138 @@
 import {useState} from "react";
 import {useForm} from "react-hook-form";
 import {Link, useLocation, useNavigate} from "react-router-dom";
-import Card from "../components/card/card";
-import FormGroup from "../components/form/form-group";
-import ServiceUsuario from "../app/service/usuarioService";
-import {mensagemDeErro, mensagemDeSucesso} from '../utils/toastr'
-import usuarioService from "../app/service/usuarioService";
+import {mensagemDeErroCadastro,mensagemDeErro, mensagemDeSucesso} from '../utils/toastr'
+import Layout from "../components/layout/layout";
+import UsuarioService from "../app/service/usuarioService";
+import Swal from "sweetalert2";
+
 /*definir a senha e finalizar o cadastro*/
-function Definirsenha () {
-    const { register, handleSubmit, formState: {errors}, watch, getValues} = useForm({
-        mode: 'onChange',
-        defaultValues:{
-            senha: '',
-            confirmacaoSenha: ''
-        }
-    });
+const Definirsenha = () => {
+
+    const location = useLocation();
     const navigate = useNavigate();
-    const usuarioService = ServiceUsuario();
+    const usuarioService = UsuarioService();
 
-    const concluirCadastro = (data) => {
-        const dadosRecuperadosDoUsuario = (sessionStorage.getItem('dadosDoUsuario'));
-        const dadoDoUsuario = JSON.parse(dadosRecuperadosDoUsuario);
-        const dadosCompleto =  {
-            ...dadoDoUsuario,
-            senha: data.senha
-            // ...data
+    const { register, handleSubmit, watch, formState: { errors }} = useForm({
+        defaultValues: {senha: '', senhaConfirmacao: ''}});
+    const dadosUsuario = location.state || {};
+
+    const cadastrarUsuario = (data) => {
+        if (data.senha === data.confirmarSenha) {
+            mensagemDeErroCadastro("As senhas não coincidem!");
+            return;
         }
-        usuarioService.cadastrar({
-            dadosCompleto,
-        }).then(response => {
-            sessionStorage.removeItem('dadosDoUsuario');
-            mensagemDeSucesso('Cadastro realizado com sucesso!');
-            navigate('/login');
-        }).catch(err => {
-            mensagemDeErro(err.response?.data);
+
+        const usuario = { ...dadosUsuario, senha: data.senha };
+
+        usuarioService.salvar(usuario)
+            .then(() => {
+                localStorage.removeItem('dadosCadastro');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Cadastro realizado com sucesso!',
+                    text: 'Agora você pode fazer login.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading()
+                        Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
+                        const barraDeProgresso = Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
+                        if (barraDeProgresso){
+                            barraDeProgresso.style.backgroundColor = '#3498db'
+                        }
+                    }
+                });
+                navigate("/login");
+            }).catch((err) => {
+            const msg = err.response?.data || "Erro inesperado ao cadastrar usuário";
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro ao finalizar o cadastro',
+                html: `<pre style={text-align: left; white-space: pre-wrap}>${msg}</pre>`,
+                showConfirmButton: false,
+                timer: 5000,
+                scrollbarPadding: false,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading()
+                    Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
+                    const barraDeProgresso = Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
+                    if (barraDeProgresso){
+                        barraDeProgresso.style.backgroundColor = '#3498db'
+                    }
+                }
+            })
         });
-
-        // Validador customizado para a senha
-        const validarSenha = (value) => {
-            const regexSenha = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-            return regexSenha.test(value) ||
-                'A senha deve ter 8+ caracteres, incluindo maiúsculas, minúsculas, números e especiais';
-        };
-
     };
-    function handleCancelar() {
-        navigate('/login');
-    }
+
+    const confirmarSenha = watch("senha");
 
     return (
-        <div className="container-fluid mt-5 style={{minHeight: '0vh', display: 'flex', alignItems: 'center'">
-            <div className="row justify-content-center w-100">
-                <div className="col-md-6" style={{marginTop: '-30px'}}> {/*style={{ marginTop: '-120px' }}*/}
-                    <div className="bs-docs-section">
-                        <Card title="Definir a senha">
-                            <div className="row justify-content-center align-items-center">
-                                <div className="col-md-10">
-                                    <div className="bs-component">
-                                        <form onSubmit={handleSubmit(concluirCadastro)}>
-                                            <fieldset className="fieldset-sm">
-                                                <FormGroup label={
-                                                    <span>
-                                                        Senha:<span className="asterisco-vermelho">*</span>
-                                                    </span>
-                                                } name={"senha"}
-                                                >
-                                                    {/* Campo senha */}
-                                                    <input
-                                                        type="password"
-                                                        {...register("senha", {required: "Digite sua senha"})}
-                                                        className="form-control form-control-sm inputPlaceholder"
-                                                        placeholder="Digite a senha"
-                                                        id="senha-id"
-                                                    />
-                                                    {errors.senha &&
-                                                        <span className="error">{errors.senha.message}</span>}
-                                                </FormGroup>
-                                                <FormGroup label={
-                                                    <span>
-                                                        Confirme sua senha:<span className="asterisco-vermelho">*</span>
-                                                    </span>
-                                                } name={"confirmarsenha"}
-                                                >
-                                                    {/* Campo repetir senha */}
-                                                    <input
-                                                        type="password"
-                                                        {...register("confirmarsenha", {required: "Confirme sua senha",
-                                                        validar: value =>
-                                                            value === watch('senha') || 'As senhas não conferem'
-                                                        })}
-                                                        onChange={(e) => {
-                                                            const { confirmarsenha } = getValues();
-                                                            if (confirmarsenha !== e.target.value) {
-                                                                errors.confirmarsenha = {
-                                                                    message: 'As senhas não conferem',
-                                                                };
-                                                            } else {
-                                                                errors.confirmarsenha = undefined;
-                                                            }
-                                                        }}
-                                                        className="form-control form-control-sm inputPlaceholder"
-                                                        placeholder="repetir sua senha"
-                                                        id="senhaconfirmacao-id"
-                                                    />
-                                                    {errors.confirmarsenha &&
-                                                        <span className="error">{errors.confirmarsenha.message}</span>}
-                                                </FormGroup>
-
-                                                {/* Botão de Login */}
-                                                <button type="submit"
-                                                        className="btn btn-success btn-sm mt-3 text-uppercase fw-bold">
-                                                    Cadastrar
-                                                </button>
-                                                {/* Botão de Login */}
-                                                <button
-                                                    type="submit" className="btn btn-success btn-sm mt-3 text-uppercase fw-bold"
-                                                    onClick={handleCancelar}>Cancelar
-                                                </button>
-                                            </fieldset>
-                                        </form>
+        <Layout>
+            <div className="container">
+                <div className="row">
+                    <div className="col-sm-8 col-md-7 col-lg-6 mx-auto ">
+                        <div className="card border-0 bg-black text-secondary shadow rounded-3 my-1">
+                            <div className="card-body p-4 p-sm-5">
+                                <h3 className="card-title text-center mb-1 fw-light fs-6">Criar nova conta</h3>
+                                <form onSubmit={handleSubmit(cadastrarUsuario)}>
+                                    {/*campo senha*/}
+                                    <div className="row">
+                                        <div className="col-md-6 mb-2">
+                                            <div className="form-floating">
+                                                <input
+                                                    {...register("senha", {required: "A senha é obrigatória"})}
+                                                    type="password"
+                                                    className="form-control"
+                                                    id="floatingInputSenha"
+                                                    placeholder="Digite a senha"
+                                                />
+                                                <label className="floatingInput">
+                                                    Digite a senha<span className="asterisco-vermelho">*</span></label>
+                                                {errors.senha && <span className="error">{errors.senha.message}</span>}
+                                            </div>
+                                        </div>
+                                        {/*campo confirmar senha*/}
+                                        <div className="col-md-6 mb-1">
+                                            <div className="form-floating">
+                                                <input
+                                                    {...register("senhaConfirmacao",
+                                                        {validate: (value) => value === confirmarSenha || "As senhas nao conferem"})}
+                                                    type="password"
+                                                    className="form-control"
+                                                    id="floatingInputConfirmacaoSenha"
+                                                    placeholder="Confirmar a senha"
+                                                />
+                                                <label className="floatingInput">
+                                                    Confirmar a senha<span className="asterisco-vermelho">*</span></label>
+                                                {errors.confirmarSenha && <span className="error">{errors.confirmarSenha.message}</span>}
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
+                                    <hr className="my-4"></hr>
+                                    {/*botão*/}
+                                    <div className="d-grid">
+                                        <button
+                                            className="btn btn-primary btn-login text-uppercase fw-bold"
+                                            type="submit">
+                                            Finalizar Cadastro
+                                        </button>
+                                    </div>
+                                    <hr className="my-4"></hr>
+                                    {/* Botão de voltar para tela de cadastro */}
+                                    <div className="d-grid">
+                                        <Link className="btn btn-outline-primary btn-login text-uppercase" to="/register">Voltar</Link>
+                                    </div>
+                                </form>
                             </div>
-                        </Card>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </Layout>
     );
-}
+};
+
 export default Definirsenha;
