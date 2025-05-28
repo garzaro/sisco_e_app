@@ -1,20 +1,14 @@
-import React, {useState} from 'react';
-import {Controller, useForm} from "react-hook-form";
-//import InputMask from "react-input-mask-next";
-import Card from "../components/card/card";
-import FormGroup from "../components/form/form-group";
+import React from 'react';
+import {useForm} from "react-hook-form";
 import UsuarioService from "../app/service/usuarioService";
-import {mensagemDeErro, mensagemDeErroCadastro, mensagemDeSucesso} from '../utils/toastr';
-import Astered from "../css/astered";
 import {Link, useNavigate} from "react-router-dom";
 import Layout from "../components/layout/layout";
-import FormLayout from "../components/form/form-layout";
-import axios from "axios";
-import {handleCpfChange} from "../utils/utils";
+import {handleCpfChange, validateTrim, validarTrim} from "../utils/utils";
 import Swal from "sweetalert2";
 
+
 function Register () {
-    const { control, register, handleSubmit, setValue, watch, formState: { errors }} = useForm({
+    const { register, handleSubmit, setValue, watch, formState: { errors }} = useForm({
         defaultValues: {
             nome: '', cpf: '', usuario: '', email: '', senha: '',
             emailConfirmacao: '', senhaConfirmacao: ''
@@ -31,9 +25,9 @@ function Register () {
         usuarioService.salvar(usuario)
         .then(function (response) {
             Swal.fire({
-                icon: 'success',
                 title: 'Cadastro realizado com sucesso!',
                 text: 'Agora você pode fazer login.',
+                icon: 'success',
                 showConfirmButton: false,
                 timer: 2000,
                 timerProgressBar: true,
@@ -49,8 +43,20 @@ function Register () {
             /*fallback*/
             navigate("/login");
         }).catch((err) => {
-            const msg = err.response?.data || "Erro inesperado ao cadastrar usuário";
-            mensagemDeErroCadastro(msg);
+            const erroCadastro = err.response?.data;
+            Swal.fire({
+                icon: 'error',
+                title: '<span style="color: rgba(65,38,44,0.49);">Erro ao cadastrar</span>',
+                html: `<div style="text-align: center; color: #f11c05">${erroCadastro}</div>`,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                footer: '<a href>Reportar erro</a>',
+                didOpen: () => {
+                    Swal.showLoading()
+                    Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
+                }
+            })
         });
     }
     /*comparacao de senha*/
@@ -73,11 +79,14 @@ function Register () {
                                     {/*campo nome completo*/}
                                     <div className="form-floating mb-2">
                                         <input
-                                            {...register("nome", {required: "O nome completo é obrigatório"},)}
+                                            {...register("nome", {required: "O nome completo é obrigatório",
+                                            setValueAs: (value) => value.trim(),
+                                            })}
                                             type="text"
                                             className="form-control"
                                             id="floatingInputNome"
                                             placeholder="Nome Completo"
+                                            onChange={(e) => e.target.value = e.target.value.toUpperCase().trimStart()}
                                         />
                                         <label className="floatingInput">Nome completo<span className="asterisco-vermelho">*</span></label>
                                         {errors.nome && <span className="error">{errors.nome.message}</span>}
@@ -126,14 +135,18 @@ function Register () {
                                     {/*campo nome de usuario*/}
                                     <div className="form-floating">
                                         <input
-                                            {...register("usuario", {required: "O nome de usuario é obrigatório"})}
+                                            {...register("usuario", {required: "O nome de usuario é obrigatório",
+                                            setValueAs: (value) => value.trim(),
+                                            })}
                                             type="text"
                                             className="form-control"
                                             id="floatingInputUsuario"
                                             placeholder="Nome de usuario"
+                                            onChange={(e) => e.target.value = e.target.value.toUpperCase().trimStart()}
                                         />
                                         <label className="floatingInput">
-                                            Nome de usuario<span className="asterisco-vermelho">*</span></label>
+                                            Nome de usuario<span className="asterisco-vermelho">*</span>
+                                        </label>
                                         {errors.usuario && <span className="error">{errors.usuario.message}</span>}
                                     </div>
                                     <hr className="my-4"></hr>
@@ -142,11 +155,15 @@ function Register () {
                                         <div className="col-md-6 mb-1">
                                             <div className="form-floating">
                                                 <input
-                                                    {...register("email", {required: "O email é obrigatório"})}
+                                                    {...register("email", {required: "O email é obrigatório",
+                                                    setValueAs: (value) => value.trim(),
+                                                    validate: validarTrim
+                                                    })}
                                                     type="email"
                                                     className="form-control"
                                                     id="floatingInputEmail"
                                                     placeholder="Digite o email"
+                                                    onChange={(e) => e.target.value = e.target.value.trimStart().trimEnd()}
                                                 />
                                                 <label className="floatingInput">
                                                     Digite o email<span className="asterisco-vermelho">*</span></label>
@@ -163,6 +180,7 @@ function Register () {
                                                     className="form-control"
                                                     id="floatingInputConfirmacaoEmail"
                                                     placeholder="Confirmar email"
+                                                    onChange={(e) => e.target.value = e.target.value.trimStart()}
                                                 />
                                                 <label className="floatingInput">
                                                     Confirmar email<span className="asterisco-vermelho">*</span></label>
@@ -176,7 +194,10 @@ function Register () {
                                         <div className="col-md-6 mb-2">
                                             <div className="form-floating">
                                                 <input
-                                                    {...register("senha", {required: "A senha é obrigatória"})}
+                                                    {...register("senha", {required: "A senha é obrigatória",
+                                                    minLength:{value: 6, message: "A senha deve ter no minimo 6 caracteres"},
+                                                    setValueAs: (value) => value.trim(),
+                                                    validate: validateTrim})}
                                                     type="password"
                                                     className="form-control"
                                                     id="floatingInputSenha"
