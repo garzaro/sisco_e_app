@@ -8548,6 +8548,11 @@ react-is@^19.1.0:
   resolved "https://registry.npmjs.org/react-is/-/react-is-19.1.0.tgz"
   integrity sha512-Oe56aUPnkHyyDxxkvqtd7KkdQP5uIUfHxd5XTb3wE9d/kRnZLmKbDB0GWk919tdQ+mxxPtG6EAs6RMT6i1qtHg==
 
+react-password-checklist@^1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/react-password-checklist/-/react-password-checklist-1.8.1.tgz#f9ac98db2a2624b83fb23bf28c004970951bb468"
+  integrity sha512-QHIU/OejxoH4/cIfYLHaHLb+yYc8mtL0Vr4HTmULxQg3ZNdI9Ni/yYf7pwLBgsUh4sseKCV/GzzYHWpHqejTGw==
+
 react-refresh@^0.11.0:
   version "0.11.0"
   resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.11.0.tgz"
