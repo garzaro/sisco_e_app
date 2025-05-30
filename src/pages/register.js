@@ -1,25 +1,22 @@
 import React, {useState} from 'react';
-import {Controller, useForm} from "react-hook-form";
-//import InputMask from "react-input-mask-next";
-import Card from "../components/card/card";
-import FormGroup from "../components/form/form-group";
+import {useForm} from "react-hook-form";
+import ReactPasswordChecklist from "react-password-checklist";
 import UsuarioService from "../app/service/usuarioService";
-import {mensagemDeErro, mensagemDeErroCadastro, mensagemDeSucesso} from '../utils/toastr';
-import Astered from "../css/astered";
+import {mensagemDeErroCadastro} from '../utils/toastr';
 import {Link, useNavigate} from "react-router-dom";
 import Layout from "../components/layout/layout";
-import FormLayout from "../components/form/form-layout";
-import axios from "axios";
 import {handleCpfChange} from "../utils/utils";
 import Swal from "sweetalert2";
 
 function Register () {
-    const { control, register, handleSubmit, setValue, watch, formState: { errors }} = useForm({
+    const { register, handleSubmit, setValue, watch, formState: { errors }} = useForm({
         defaultValues: {
             nome: '', cpf: '', usuario: '', email: '', senha: '',
             emailConfirmacao: '', senhaConfirmacao: ''
         }
     });
+    const [senha, setSenha] = useState('');
+    const [isValid, setIsValid] = useState(true);
     const navigate = useNavigate();
     const usuarioService = UsuarioService();
 
@@ -53,10 +50,12 @@ function Register () {
             mensagemDeErroCadastro(msg);
         });
     }
-    /*comparacao de senha*/
-    const confirmarSenha = watch('senha');
+    /*verificacao de senhas*/
+    const senhaDigitada = watch("senha");
+    const confirmarSenha = watch('confirmarSenha');
     /*comparacao de email*/
     const confirmarEmail = watch('email');
+    /*mascara cpf*/
     const handleCpfMask = (e) => {
         const mascaraCpf = handleCpfChange(e.target.value);
         setValue('cpf', mascaraCpf);
@@ -82,30 +81,6 @@ function Register () {
                                         <label className="floatingInput">Nome completo<span className="asterisco-vermelho">*</span></label>
                                         {errors.nome && <span className="error">{errors.nome.message}</span>}
                                     </div>
-                                    {/*campo cpf*
-                                    <div className="form-floating mb-2">
-                                        <Controller
-                                            name="cadastroPessoaFisica"
-                                            control={control}
-                                            rules={{ required: "O CPF é obrigatório" }}
-                                            render={({ field }) => (
-                                            <InputMask
-                                                mask="999.999.999-99"
-                                                value={field.value || ""}
-                                                onChange={field.onChange}
-                                                onBlur={field.onBlur}
-                                                disabled={field.disabled}
-                                                as="input"
-                                                type="text"
-                                                className={`form-control ${errors.cadastroPessoaFisica ? "is-invalid" : ""}`}
-                                                id="floatingInputCpf"
-                                                placeholder="000.000.000-00"
-                                            />
-                                        )}
-                                        />
-                                        <label className="floatingInput">Cadastro Pessoa Física<span className="asterisco-vermelho">*</span></label>
-                                        {errors.cadastroPessoaFisica && (<span className="error">{errors.cadastroPessoaFisica.message}</span>)}
-                                    </div>*/}
                                     {/*campo cpf*/}
                                     <div className="form-floating mb-2">
                                         <input
@@ -205,9 +180,38 @@ function Register () {
                                         </div>
                                     </div>
                                     <hr className="my-4"></hr>
+                                    {/* checklist de senha */}
+                                    {(watch("senha")?.length > 0 || watch("confirmarSenha")?.length > 0) && (
+                                        <ReactPasswordChecklist
+                                            rules={[
+                                                "minLength",
+                                                "specialChar",
+                                                "number",
+                                                "capital",
+                                                "lowercase",
+                                                "noSpaces",
+                                                "match",
+                                            ]}
+                                            minLength={8}
+                                            value={watch("senha")}
+                                            valueAgain={watch("confirmarSenha")}
+                                            className="password-checklist check-icon cross-icon"
+                                            messages={{
+                                                minLength: "A senha deve ter no mínimo 8 caracteres",
+                                                specialChar: "Deve conter caractere especial - !@#$%+",
+                                                number: "Deve conter número",
+                                                capital: "Deve conter letra maiúscula",
+                                                lowercase: "Deve conter letra minúscula",
+                                                noSpaces: "Não deve conter espaços",
+                                                match: "As senhas coincidem",
+                                            }}
+                                            onChange={(isValid) => setIsValid(isValid)}
+                                        />
+                                    )}
                                     {/*botão*/}
                                     <div className="d-grid">
                                         <button
+                                            disabled={!isValid}
                                             className="btn btn-primary btn-login text-uppercase fw-bold"
                                             onClick={handleSubmit(cadastrarUsuario)}>
                                             Cadastrar
