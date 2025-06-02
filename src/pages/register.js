@@ -7,6 +7,7 @@ import {Link, useNavigate} from "react-router-dom";
 import Layout from "../components/layout/layout";
 import {handleCpfChange} from "../utils/utils";
 import Swal from "sweetalert2";
+import SenhaVisibilidadeToggle from "../components/senhaVisibilidadeToggle";
 
 function Register () {
     const { register, handleSubmit, setValue, watch, formState: { errors }} = useForm({
@@ -16,6 +17,8 @@ function Register () {
         }
     });
     const [senha, setSenha] = useState('');
+    const [mostarSenha, setMostarSenha] = useState(false);
+    const [mostrarSenhaConfirmacao, setMostrarSenhaConfirmacao] = useState(false);
     const [isValid, setIsValid] = useState(true);
     const navigate = useNavigate();
     const usuarioService = UsuarioService();
@@ -27,6 +30,7 @@ function Register () {
         }
         usuarioService.salvar(usuario)
         .then(function (response) {
+            console.log(response)
             Swal.fire({
                 icon: 'success',
                 title: 'Cadastro realizado com sucesso!',
@@ -59,6 +63,13 @@ function Register () {
     const handleCpfMask = (e) => {
         const mascaraCpf = handleCpfChange(e.target.value);
         setValue('cpf', mascaraCpf);
+    }
+
+    const toggleVisibilidadeSenha = () => {
+        setMostarSenha(!mostarSenha);
+    }
+    const toggleVisibilidadeSenhaConfirmacao = () => {
+        setMostrarSenhaConfirmacao(!mostrarSenhaConfirmacao);
     }
     return (
         <Layout>
@@ -152,13 +163,17 @@ function Register () {
                                             <div className="form-floating">
                                                 <input
                                                     {...register("senha", {required: "A senha é obrigatória"})}
-                                                    type="password"
+                                                    type={mostarSenha ? "text" : "password"}
                                                     className="form-control"
                                                     id="floatingInputSenha"
                                                     placeholder="Digite a senha"
                                                 />
                                                 <label className="floatingInput">
-                                                    Digite a senha<span className="asterisco-vermelho">*</span></label>
+                                                    Digite a senha<span className="asterisco-vermelho">*</span>
+                                                </label>
+                                                <SenhaVisibilidadeToggle
+                                                    mostrarSenha={ mostarSenha }
+                                                    onClick={toggleVisibilidadeSenha}/>
                                                 {errors.senha && <span className="error">{errors.senha.message}</span>}
                                             </div>
                                         </div>
@@ -168,13 +183,16 @@ function Register () {
                                                 <input
                                                     {...register("senhaConfirmacao",
                                                     {validate: (value) => value === confirmarSenha || "As senhas nao conferem"})}
-                                                    type="password"
+                                                    type={mostrarSenhaConfirmacao ? "text" : "password"}
                                                     className="form-control"
                                                     id="floatingInputConfirmacaoSenha"
                                                     placeholder="Confirmar a senha"
                                                 />
                                                 <label className="floatingInput">
                                                     Confirmar a senha<span className="asterisco-vermelho">*</span></label>
+                                                <SenhaVisibilidadeToggle
+                                                    mostrarSenhaConfirmacao={ mostrarSenhaConfirmacao }
+                                                    onClick={toggleVisibilidadeSenhaConfirmacao}/>
                                                 {errors.senhaConfirmacao && <span className="error">{errors.senhaConfirmacao.message}</span>}
                                             </div>
                                         </div>

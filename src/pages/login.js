@@ -6,10 +6,13 @@ import UsuarioService from "../app/service/usuarioService";
 import FormLayout from "../components/form/form-layout";
 import Layout from "../components/layout/layout";
 import Swal from "sweetalert2";
+import SenhaVisibilidadeToggle from "../components/senhaVisibilidadeToggle";
+import senhaVisibilidadeToggle from "../components/senhaVisibilidadeToggle";
 
 function LoginForm () {
     const { register, handleSubmit, formState: { errors }} = useForm();
     const navigate = useNavigate();
+    const [mostrarSenhaLogin, setMostrarSenhaLogin] = useState(false);
     const usuarioService = UsuarioService();
 
     const fazerLogin = (data) => {
@@ -37,6 +40,9 @@ function LoginForm () {
             mensagemDeErro(err.response?.data);
         });
     };
+    const toggleVisibilidadeSenha = () => {
+       setMostrarSenhaLogin(!mostrarSenhaLogin);
+    }
 
     return (
         <>
@@ -64,12 +70,16 @@ function LoginForm () {
                                         <FormLayout>
                                             <input
                                                 {...register("senha", {required: "A senha é obrigatória"})}
-                                                type="password"
+                                                type={mostrarSenhaLogin ? "text" : "password"}
                                                 className="form-control"
                                                 id="floatingInputSenha"
                                                 placeholder="Digite a senha"
                                             />
                                             <label className="floatingInput">Digite a senha<span className="asterisco-vermelho">*</span></label>
+                                            <SenhaVisibilidadeToggle
+                                                mostrarSenha={ mostrarSenhaLogin }
+                                                onClick={ toggleVisibilidadeSenha }
+                                            />
                                             {errors.senha && <span className="error">{errors.senha.message}</span>}
                                         </FormLayout>
                                         {/*esqueceu a senha*/}
