@@ -1,75 +1,38 @@
-import React, {useState} from 'react';
+import React, { useEffect } from 'react';
 import {useForm} from "react-hook-form";
-import ReactPasswordChecklist from "react-password-checklist";
-import UsuarioService from "../app/service/usuarioService";
-import {mensagemDeErroCadastro} from '../utils/toastr';
 import {Link, useNavigate} from "react-router-dom";
 import Layout from "../components/layout/layout";
 import {handleCpfChange} from "../utils/utils";
-import Swal from "sweetalert2";
-import SenhaVisibilidadeToggle from "../components/senhaVisibilidadeToggle";
 
 function Register () {
-    const { register, handleSubmit, setValue, watch, formState: { errors }} = useForm({
+    const { control, register, handleSubmit, setValue, watch, formState: { errors }} = useForm({
         defaultValues: {
-            nome: '', cpf: '', usuario: '', email: '', senha: '',
-            emailConfirmacao: '', senhaConfirmacao: ''
+            nome: '', cpf: '', usuario: '', email: '',
         }
     });
-    const [senha, setSenha] = useState('');
-    const [mostarSenha, setMostarSenha] = useState(false);
-    const [mostrarSenhaConfirmacao, setMostrarSenhaConfirmacao] = useState(false);
-    const [isValid, setIsValid] = useState(true);
-    const navigate = useNavigate();
-    const usuarioService = UsuarioService();
 
-    const cadastrarUsuario = (data) => {
-        const usuario = {
-            nome: data.nome, cpf: data.cpf, usuario: data.usuario,
-            email: data.email, senha: data.senha,
+    const navigate = useNavigate();
+
+    /*ao montar o componente recupera se houver dados salvo*/
+    useEffect(() => {
+        const dadosSalvos = localStorage.getItem('dadosCadastro');
+        if(dadosSalvos){
+            Object.entries(JSON.parse(dadosSalvos)).forEach(([key, value]) => {
+                setValue(key, value);
+            });
         }
-        usuarioService.salvar(usuario)
-        .then(function (response) {
-            console.log(response)
-            Swal.fire({
-                icon: 'success',
-                title: 'Cadastro realizado com sucesso!',
-                text: 'Agora você pode fazer login.',
-                showConfirmButton: false,
-                timer: 2000,
-                timerProgressBar: true,
-                didOpen: () => {
-                    Swal.showLoading()
-                    Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
-                    const barraDeProgresso = Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
-                    if (barraDeProgresso){
-                        barraDeProgresso.style.backgroundColor = '#3498db'
-                    }
-                }
-            })
-            /*fallback*/
-            navigate("/login");
-        }).catch((err) => {
-            const msg = err.response?.data || "Erro inesperado ao cadastrar usuário";
-            mensagemDeErroCadastro(msg);
-        });
+    }, [setValue]);
+
+    const handleAvancar = (data) => {
+        console.log("   VERIFICAR O ESTADO QUE VAI SER RECUPERADO ", data);
+        localStorage.setItem('dadosCadastro', JSON.stringify(data));
+        navigate('/definirsenha', {state: data});
     }
-    /*verificacao de senhas*/
-    const senhaDigitada = watch("senha");
-    const confirmarSenha = watch('confirmarSenha');
     /*comparacao de email*/
     const confirmarEmail = watch('email');
-    /*mascara cpf*/
     const handleCpfMask = (e) => {
         const mascaraCpf = handleCpfChange(e.target.value);
         setValue('cpf', mascaraCpf);
-    }
-
-    const toggleVisibilidadeSenha = () => {
-        setMostarSenha(!mostarSenha);
-    }
-    const toggleVisibilidadeSenhaConfirmacao = () => {
-        setMostrarSenhaConfirmacao(!mostrarSenhaConfirmacao);
     }
     return (
         <Layout>
@@ -79,7 +42,7 @@ function Register () {
                         <div className="card border-0 bg-black text-secondary shadow rounded-3 my-1">
                             <div className="card-body p-4 p-sm-5">
                                 <h3 className="card-title text-center mb-1 fw-light fs-6">Criar nova conta</h3>
-                                <form onSubmit={handleSubmit(cadastrarUsuario)}>
+                                <form onSubmit={handleSubmit(handleAvancar)}>
                                     {/*campo nome completo*/}
                                     <div className="form-floating mb-2">
                                         <input
@@ -157,82 +120,12 @@ function Register () {
                                         </div>
                                     </div>
                                     <hr className="my-4"></hr>
-                                    {/*campo senha*/}
-                                    <div className="row">
-                                        <div className="col-md-6 mb-2">
-                                            <div className="form-floating">
-                                                <input
-                                                    {...register("senha", {required: "A senha é obrigatória"})}
-                                                    type={mostarSenha ? "text" : "password"}
-                                                    className="form-control"
-                                                    id="floatingInputSenha"
-                                                    placeholder="Digite a senha"
-                                                />
-                                                <label className="floatingInput">
-                                                    Digite a senha<span className="asterisco-vermelho">*</span>
-                                                </label>
-                                                <SenhaVisibilidadeToggle
-                                                    mostrarSenha={ mostarSenha }
-                                                    onClick={toggleVisibilidadeSenha}/>
-                                                {errors.senha && <span className="error">{errors.senha.message}</span>}
-                                            </div>
-                                        </div>
-                                        {/*campo confirmar senha*/}
-                                        <div className="col-md-6 mb-1">
-                                            <div className="form-floating">
-                                                <input
-                                                    {...register("senhaConfirmacao",
-                                                    {validate: (value) => value === confirmarSenha || "As senhas nao conferem"})}
-                                                    type={mostrarSenhaConfirmacao ? "text" : "password"}
-                                                    className="form-control"
-                                                    id="floatingInputConfirmacaoSenha"
-                                                    placeholder="Confirmar a senha"
-                                                />
-                                                <label className="floatingInput">
-                                                    Confirmar a senha<span className="asterisco-vermelho">*</span></label>
-                                                <SenhaVisibilidadeToggle
-                                                    mostrarSenhaConfirmacao={ mostrarSenhaConfirmacao }
-                                                    onClick={toggleVisibilidadeSenhaConfirmacao}/>
-                                                {errors.senhaConfirmacao && <span className="error">{errors.senhaConfirmacao.message}</span>}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr className="my-4"></hr>
-                                    {/* checklist de senha */}
-                                    {(watch("senha")?.length > 0 || watch("confirmarSenha")?.length > 0) && (
-                                        <ReactPasswordChecklist
-                                            rules={[
-                                                "minLength",
-                                                "specialChar",
-                                                "number",
-                                                "capital",
-                                                "lowercase",
-                                                "noSpaces",
-                                                "match",
-                                            ]}
-                                            minLength={8}
-                                            value={watch("senha")}
-                                            valueAgain={watch("confirmarSenha")}
-                                            className="password-checklist check-icon cross-icon"
-                                            messages={{
-                                                minLength: "A senha deve ter no mínimo 8 caracteres",
-                                                specialChar: "Deve conter caractere especial - !@#$%+",
-                                                number: "Deve conter número",
-                                                capital: "Deve conter letra maiúscula",
-                                                lowercase: "Deve conter letra minúscula",
-                                                noSpaces: "Não deve conter espaços",
-                                                match: "As senhas coincidem",
-                                            }}
-                                            onChange={(isValid) => setIsValid(isValid)}
-                                        />
-                                    )}
                                     {/*botão*/}
                                     <div className="d-grid">
                                         <button
-                                            disabled={!isValid}
                                             className="btn btn-primary btn-login text-uppercase fw-bold"
-                                            onClick={handleSubmit(cadastrarUsuario)}>
-                                            Cadastrar
+                                            type="submit">
+                                            Avançar
                                         </button>
                                     </div>
                                     <hr className="my-4"></hr>
