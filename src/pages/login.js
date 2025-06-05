@@ -63,7 +63,7 @@ function LoginForm () {
                                                 id="floatingInputEmail"
                                                 placeholder="Digite o email"
                                             />
-                                            <label className="floatingInput">Digite o e-mail<span className="asterisco-vermelho">*</span></label>
+                                            <label className="floatingInput">Digite o e-mail <span className="asterisco-vermelho">*</span></label>
                                             {errors.email && <span className="error">{errors.email.message}</span>}
                                         </FormLayout>
                                         {/*campo de senha*/}
@@ -75,7 +75,7 @@ function LoginForm () {
                                                 id="floatingInputSenha"
                                                 placeholder="Digite a senha"
                                             />
-                                            <label className="floatingInput">Digite a senha<span className="asterisco-vermelho">*</span></label>
+                                            <label className="floatingInput">Digite a senha <span className="asterisco-vermelho">*</span></label>
                                             <SenhaVisibilidadeToggle
                                                 mostrarSenha={ mostrarSenhaLogin }
                                                 onClick={ toggleVisibilidadeSenha }
