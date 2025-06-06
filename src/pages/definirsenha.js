@@ -77,7 +77,6 @@ const Definirsenha = () => {
     };
 
     const confirmarSenha = watch('senha');
-
     const visualizarSenha = () =>
     { setMostrarSenhaTexto(!mostrarSenhaTexto);}
 
