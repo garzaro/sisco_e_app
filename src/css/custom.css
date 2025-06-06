@@ -415,3 +415,40 @@ pre{
     75%  { content: "..."; }
     100% { content: ""; }
 }
+/*personalizando estilo para feedback visual na criacao e redefinicao de senha*/
+.password-checklist{
+    font-size: 0.75rem; /*12px*/
+    line-height: 1.4rem;
+}
+.password-checklist li {
+    font-size: 0.75rem; /* cada linha/mensagem com o tamanho ajustado */
+}
+
+.password-checklist li::before {
+    content: "✘";
+    display: inline-block;
+    margin-right: 8px;
+    width: 5px; /* tamanho do ícone */
+    height: 14px; /*tamanho do ícone */
+    font-size: 12px; /* tamanho da fonte do ícone */
+    color: rgba(243, 28, 8, 0.89);
+}
+
+.password-checklist li.valid {
+    color: rgb(184, 248, 170);
+}
+
+.password-checklist li.valid::before {
+    content: "✔"; /* Ícone de válido*/
+    color: rgba(70, 244, 11, 0.97);
+    width: 5px; /* tamanho do ícone */
+    height: 20px; /*tamanho do ícone */
+    font-size: 15px; /* tamanho da fonte do ícone */
+}
+/* Oculta os ícones original da lib ReactPasswordChecklist */
+.password-checklist .check-icon, svg{
+    display: none;
+}
+.password-checklist .cross-icon svg{
+    display: none;
+}

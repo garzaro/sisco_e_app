@@ -7,12 +7,14 @@ import UsuarioService from "../app/service/usuarioService";
 import Swal from "sweetalert2";
 import AlterarVisualizarSenha from "../utils/visualizacaoSenhaTexto";
 import {validacaoSenhaTrim} from "../utils/utils";
+import ReactPasswordChecklist from "react-password-checklist";
 
 /*definir a senha e finalizar o cadastro*/
 const Definirsenha = () => {
 
     const [mostrarSenhaTexto, setMostrarSenhaTexto] = useState(false);
     const [confirmarMostrarSenhaTexto, setConfirmarMostrarSenhaTexto] = useState(false);
+    const [isValid, setIsValid] = useState(true);
     const location = useLocation();
     const navigate = useNavigate();
     const usuarioService = UsuarioService();
@@ -33,6 +35,7 @@ const Definirsenha = () => {
 
         usuarioService.salvar(usuario)
             .then(() => {
+                console.log("VERIFICAR SE A SENHA ESTÁ SENDO MOSTRADA AQUI", usuario);
                 localStorage.removeItem('dadosCadastro');
                 Swal.fire({
                     icon: 'success',
@@ -88,7 +91,8 @@ const Definirsenha = () => {
                     <div className="col-sm-8 col-md-7 col-lg-6 mx-auto ">
                         <div className="card border-0 bg-black text-secondary shadow rounded-3 my-1">
                             <div className="card-body p-4 p-sm-5">
-                                <h3 className="card-title text-center mb-5 fw-light fs-5">Evite senhas fáceis, nome próprio, data de aniversário, 123456</h3>
+                                <h3 className="card-title text-center mb-1 fw-light fs-3">Escola uma senha</h3>
+                                <h6 className="text-center mb-5 fs-6">(Evite senhas como: nome próprio, data de aniversário, sequência numérica)</h6>
                                 <form onSubmit={handleSubmit(cadastrarUsuario)}>
                                     {/*campo senha*/}
                                     <div className="row">
@@ -141,6 +145,34 @@ const Definirsenha = () => {
                                                 {errors.confirmarSenha && <span className="error">{errors.confirmarSenha.message}</span>}
                                             </div>
                                         </div>
+                                        {/*checklist de senha*/}
+                                        {(watch("senha")?.length > 0 || watch("confirmarSenha")?.length > 0) && (
+                                            <ReactPasswordChecklist
+                                                rules={[
+                                                    "minLength",
+                                                    "specialChar",
+                                                    "number",
+                                                    "capital",
+                                                    "lowercase",
+                                                    "noSpaces",
+                                                    "match",
+                                                ]}
+                                                minLength={6}
+                                                value={watch("senha")}
+                                                valueAgain={watch("confirmarSenha")}
+                                                className="password-checklist check-icon cross-icon"
+                                                messages={{
+                                                    minLength: "A senha deve ter no mínimo 6 caracteres",
+                                                    specialChar: "Deve conter caractere especial - !@#$%+",
+                                                    number: "Deve conter número",
+                                                    capital: "Deve conter letra maiúscula",
+                                                    lowercase: "Deve conter letra minúscula",
+                                                    noSpaces: "Não deve conter espaços",
+                                                    match: "As senhas coincidem",
+                                            }}
+                                            onChange={(isValid) => setIsValid(isValid)}
+                                        />
+                                    )}
                                     </div>
                                     <hr className="my-4"></hr>
                                     {/*botão*/}
