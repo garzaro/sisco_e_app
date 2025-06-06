@@ -10,7 +10,7 @@ import {validacaoSenhaTrim} from "../utils/utils";
 import ReactPasswordChecklist from "react-password-checklist";
 
 /*definir a senha e finalizar o cadastro*/
-const Definirsenha = () => {
+const DefinirSenha = () => {
 
     const [mostrarSenhaTexto, setMostrarSenhaTexto] = useState(false);
     const [confirmarMostrarSenhaTexto, setConfirmarMostrarSenhaTexto] = useState(false);
@@ -197,4 +197,4 @@ const Definirsenha = () => {
     );
 };
 
-export default Definirsenha;
+export default DefinirSenha;

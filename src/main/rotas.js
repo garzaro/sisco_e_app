@@ -4,7 +4,8 @@ import Navbar from "../components/navbar/navbar";
 import Home from '../pages/home';
 import Login from '../pages/login';
 import Register from '../pages/register';
-import Definirsenha from "../pages/definirsenha";
+import DefinirSenha from "../pages/definir-senha";
+import ConsultarEscola from "../pages/consultarEscola/consultar-escola";
 
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -22,7 +23,8 @@ const Rotas = () => {
                 <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/definirsenha" element={<Definirsenha />} />
+                <Route path="/definirsenha" element={<DefinirSenha />} />
+                <Route path="/consultar-escola" element={<ConsultarEscola />} />
             </Routes>
         </Router>
     );
