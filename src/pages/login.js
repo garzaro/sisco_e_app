@@ -7,7 +7,6 @@ import FormLayout from "../components/form/form-layout";
 import Layout from "../components/layout/layout";
 import Swal from "sweetalert2";
 import SenhaVisibilidadeToggle from "../components/senhaVisibilidadeToggle";
-import senhaVisibilidadeToggle from "../components/senhaVisibilidadeToggle";
 
 function LoginForm () {
     const { register, handleSubmit, formState: { errors }} = useForm();
