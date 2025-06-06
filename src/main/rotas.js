@@ -7,6 +7,7 @@ import Register from '../pages/register';
 import Definirsenha from "../pages/definirsenha";
 
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'bootswatch/dist/flatly/bootstrap.min.css'
 import 'toastr/build/toastr.css'
 import 'toastr/build/toastr.min.js'
