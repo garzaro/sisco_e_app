@@ -1,24 +1,30 @@
 import {useState} from "react";
 import {useForm} from "react-hook-form";
 import {Link, useLocation, useNavigate} from "react-router-dom";
-import {mensagemDeErroCadastro,mensagemDeErro, mensagemDeSucesso} from '../utils/toastr'
+import {mensagemDeErroCadastro} from '../utils/toastr'
 import Layout from "../components/layout/layout";
 import UsuarioService from "../app/service/usuarioService";
 import Swal from "sweetalert2";
+import AlterarVisualizarSenha from "../utils/visualizacaoSenhaTexto";
+import {validacaoSenhaTrim} from "../utils/utils";
 
 /*definir a senha e finalizar o cadastro*/
 const Definirsenha = () => {
 
+    const [mostrarSenhaTexto, setMostrarSenhaTexto] = useState(false);
+    const [confirmarMostrarSenhaTexto, setConfirmarMostrarSenhaTexto] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
     const usuarioService = UsuarioService();
 
     const { register, handleSubmit, watch, formState: { errors }} = useForm({
-        defaultValues: {senha: '', senhaConfirmacao: ''}});
+        defaultValues: {
+            senha: '', confirmarSenha: '',
+        }});
     const dadosUsuario = location.state || {};
 
     const cadastrarUsuario = (data) => {
-        if (data.senha === data.confirmarSenha) {
+        if (data.senha === data.senhaConfirmacao) {
             mensagemDeErroCadastro("As senhas não coincidem!");
             return;
         }
@@ -67,7 +73,13 @@ const Definirsenha = () => {
         });
     };
 
-    const confirmarSenha = watch("senha");
+    const confirmarSenha = watch('senha');
+
+    const visualizarSenha = () =>
+    { setMostrarSenhaTexto(!mostrarSenhaTexto);}
+
+    const confirmarVisualizarSenha = () =>
+    { setConfirmarMostrarSenhaTexto(!confirmarMostrarSenhaTexto)}
 
     return (
         <Layout>
@@ -76,21 +88,33 @@ const Definirsenha = () => {
                     <div className="col-sm-8 col-md-7 col-lg-6 mx-auto ">
                         <div className="card border-0 bg-black text-secondary shadow rounded-3 my-1">
                             <div className="card-body p-4 p-sm-5">
-                                <h3 className="card-title text-center mb-1 fw-light fs-6">Criar nova conta</h3>
+                                <h3 className="card-title text-center mb-5 fw-light fs-5">Evite senhas fáceis, nome próprio, data de aniversário, 123456</h3>
                                 <form onSubmit={handleSubmit(cadastrarUsuario)}>
                                     {/*campo senha*/}
                                     <div className="row">
                                         <div className="col-md-6 mb-2">
                                             <div className="form-floating">
                                                 <input
-                                                    {...register("senha", {required: "A senha é obrigatória"})}
-                                                    type="password"
+                                                    type={ mostrarSenhaTexto ? "text" : "password"}
+                                                    {...register("senha", {
+                                                        required: "A senha é obrigatória",
+                                                        minLength: {
+                                                            value: 6,
+                                                            message: "A senha deve er no mínimo 6 caracteres"
+                                                        },
+                                                        validate: validacaoSenhaTrim,
+                                                    })}
                                                     className="form-control"
                                                     id="floatingInputSenha"
                                                     placeholder="Digite a senha"
                                                 />
                                                 <label className="floatingInput">
-                                                    Digite a senha<span className="asterisco-vermelho">*</span></label>
+                                                    Digite a senha <span className="asterisco-vermelho">*</span>
+                                                </label>
+                                                <AlterarVisualizarSenha
+                                                senhaTexto={mostrarSenhaTexto}
+                                                onClick={visualizarSenha}
+                                                />
                                                 {errors.senha && <span className="error">{errors.senha.message}</span>}
                                             </div>
                                         </div>
@@ -98,15 +122,22 @@ const Definirsenha = () => {
                                         <div className="col-md-6 mb-1">
                                             <div className="form-floating">
                                                 <input
-                                                    {...register("senhaConfirmacao",
-                                                        {validate: (value) => value === confirmarSenha || "As senhas nao conferem"})}
-                                                    type="password"
+                                                    type={confirmarMostrarSenhaTexto ? "text" : "password"}
+                                                    {...register("confirmarSenha", {required: "Confirmar a senha",
+
+                                                        validate: (value) =>
+                                                            value === confirmarSenha || "As senhas nao conferem"})}
                                                     className="form-control"
                                                     id="floatingInputConfirmacaoSenha"
                                                     placeholder="Confirmar a senha"
                                                 />
                                                 <label className="floatingInput">
-                                                    Confirmar a senha<span className="asterisco-vermelho">*</span></label>
+                                                    Confirmar a senha <span className="asterisco-vermelho">*</span>
+                                                </label>
+                                                <AlterarVisualizarSenha
+                                                    confirmarSenhaTexto={confirmarMostrarSenhaTexto}
+                                                    onClick={confirmarVisualizarSenha}
+                                                />
                                                 {errors.confirmarSenha && <span className="error">{errors.confirmarSenha.message}</span>}
                                             </div>
                                         </div>
