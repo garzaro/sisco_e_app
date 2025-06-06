@@ -14,3 +14,10 @@ export const handleCpfChange = (valor) => {
     return valor;
     /*console.log('mudou', valor)*/
 };
+/*trim nos inputs de cadastro*/
+export const validacaoSenhaTrim = (value) =>{
+    if (value.includes(' ')) {
+        return "A senha não pode conter espaços";
+    }
+    return true;
+}
