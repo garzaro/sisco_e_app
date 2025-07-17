@@ -4,9 +4,9 @@ import {Link, useNavigate} from "react-router-dom";
 import {mensagemDeErro} from '../components/utils/toastr'
 import UsuarioService from "../app/service/usuario-service";
 import FormLayout from "../components/form/form-layout";
-import Layout from "../components/layout/layout";
+import Layout from "../components/form/layout";
 import Swal from "sweetalert2";
-import SenhaVisibilidadeToggle from "../components/senhaVisibilidadeToggle";
+import SenhaVisibilidadeToggle from "../components/utils/senhaVisibilidadeToggle";
 
 function LoginForm () {
     const { register, handleSubmit, formState: { errors }} = useForm();
