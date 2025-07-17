@@ -1,12 +1,13 @@
 import React, {useEffect} from 'react';
 import {useForm, } from "react-hook-form";
 import {useNavigate} from "react-router-dom";
-import Layout from "../../components/layout/layout";
+import Layout from "../../components/form/layout";
 import Astered from "../../css/astered";
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
+import FormLayout from "../../components/form/form-layout";
 
 
 function Infraestrutura() {
@@ -51,7 +52,7 @@ function Infraestrutura() {
     }
 
     return (
-        <Layout>
+        <FormLayout>
             <div className="p-fluid grid formgrid ">
                 {/* Nome */}
                 <div className="field col-12 md:col-6">
@@ -118,7 +119,7 @@ function Infraestrutura() {
                     <Button label="Enviar" icon="pi pi-check" className="w-full" />
                 </div>
             </div>
-        </Layout>
+        </FormLayout>
     );
 }
 export default Infraestrutura;
