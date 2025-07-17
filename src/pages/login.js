@@ -31,7 +31,9 @@ function LoginForm () {
                     Swal.showLoading()
                     Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
                     const barraDeProgresso = Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
-                    barraDeProgresso.style.backgroundColor = '#3498db'
+                    if (barraDeProgresso) {
+                        barraDeProgresso.style.backgroundColor = '#3498db'
+                    }
                 }
             })
             setTimeout(navigate("/home"), 2000);
@@ -39,12 +41,14 @@ function LoginForm () {
             const msg = err.response?.data || "Erro inesperado ao fazer login!";
             Swal.fire({
                 icon: 'error',
-                title: 'Erro ao fazer o login',
-                html: `<pre style="text-align: center; color: #e95e50; white-space: pre-wrap">${msg}</pre>`,
+                title: 'Erro ao fazer o login!',
+                html: `<pre style="text-align: center; color: #ec857a; white-space: pre-wrap">${msg}</pre>`,
                 showConfirmButton: false,
-                timer: 3000,
+                timer: 4000,
                 scrollbarPadding: false,
                 timerProgressBar: true,
+                color: '#e95e50',
+                background: 'rgba(211,203,202,0.76)',
                 didOpen: () => {
                     Swal.showLoading()
                     Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
