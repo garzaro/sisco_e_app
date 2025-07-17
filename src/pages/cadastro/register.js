@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import {useForm} from "react-hook-form";
 import {Link, useNavigate} from "react-router-dom";
-import Layout from "../../components/layout/layout";
+import Layout from "../../components/form/layout";
 import {handleCpfChange} from "../../components/utils/utils";
 import {carregarDadosFormulario, salvarDadosFormulario} from "../../components/utils/storageUtils";
 
