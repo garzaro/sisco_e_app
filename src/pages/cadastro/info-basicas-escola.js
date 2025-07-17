@@ -1,8 +1,12 @@
 import React, {useEffect} from 'react';
 import {useForm, } from "react-hook-form";
 import {useNavigate} from "react-router-dom";
-import Layout from "../../components/layout/layout";
 import Astered from "../../css/astered";
+import FormLayout from "../../components/form/form-layout";
+import {InputText} from "primereact/inputtext";
+import {Dropdown} from "primereact/dropdown";
+import {Calendar} from "primereact/calendar";
+import {Button} from "primereact/button";
 
 function InfoBasicasEscola() {
     const { register, handleSubmit, setValue, formState: { errors }} = useForm({
@@ -39,8 +43,8 @@ function InfoBasicasEscola() {
 
     return (
         <>
-            <Layout>
-                <div className="container">
+            <FormLayout>
+                <div>
                     <div className="row">
                         <div className="col-sm-8 col-md-7 col-lg-6 mx-auto">
                             <div className="card border-0 bg-black text-secondary shadow rounded-3 my-1">
@@ -49,123 +53,87 @@ function InfoBasicasEscola() {
                                     <h3 className="text-secondary my-1 text-center mb-3">Escola</h3> {/*card-title text-center mb-1 fw-light fs-6*/}
 
                                     <form onSubmit={handleSubmit(handleAvancar)}>
+                                        <FormLayout>
+                                            <div className="p-fluid grid formgrid ">
+                                                {/* Nome */}
+                                                <div className="field col-12 md:col-6">
+                                                    <label htmlFor="nome">Nome</label>
+                                                    <InputText id="nome" />
+                                                </div>
 
-                                        {/*campo nome escola*/}
-                                        <div className="form-floating mb-2">
-                                            <input
-                                                {...register("nome", {required: "O nome da escola é obrigatório"},)}
-                                                type="text"
-                                                className="form-control"
-                                                id="floatingInputNome"
-                                                placeholder="Nome da Escola"
-                                            />
-                                            <label className="floatingInput">Nome da escola: <Astered>*</Astered></label>
-                                            {errors.nome && <span className="error">{errors.nome.message}</span>}
-                                        </div>
+                                                {/* Sobrenome */}
+                                                <div className="field col-12 md:col-6">
+                                                    <label htmlFor="sobrenome">Sobrenome</label>
+                                                    <InputText id="sobrenome" />
+                                                </div>
 
-                                        {/*campo codigo escola*/}
-                                        <div className="form-floating mb-2">
-                                            <input
-                                                {...register("codigo", {required: "O código da escola é obrigatório"},)}
-                                                type="text"
-                                                className="form-control"
-                                                id="floatingInputCodigo"
-                                                placeholder="Codigo da escola"
-                                            />
-                                            <label className="floatingInput">Código: <Astered>*</Astered></label>
-                                            {errors.codigo && <span className="error">{errors.codigo.message}</span>}
-                                        </div>
+                                                {/* E-mail */}
+                                                <div className="field col-12 md:col-6">
+                                                    <label htmlFor="email">Email</label>
+                                                    <InputText id="email" type="email" />
+                                                </div>
 
-                                        {/*campo email escola*/}
-                                        <div className="form-floating mb-2">
-                                            <input
-                                                {...register("email", {required: "O email institucional da escola é obrigatório"},)}
-                                                type="text"
-                                                className="form-control"
-                                                id="floatingInputEmail"
-                                                placeholder="Email da Escola"
-                                            />
-                                            <label className="floatingInput">Email institucional: <Astered>*</Astered></label>
-                                            {errors.email && <span className="error">{errors.email.message}</span>}
-                                        </div>
+                                                {/* Telefone */}
+                                                <div className="field col-12 md:col-6">
+                                                    <label htmlFor="telefone">Telefone</label>
+                                                    <InputText id="telefone" />
+                                                </div>
 
-                                        {/*campo telefone escola*/}
-                                        <div className="form-floating mb-2">
-                                            <input
-                                                {...register("telefone", {required: "O telefone da escola é obrigatório"},)}
-                                                type="text"
-                                                className="form-control"
-                                                id="floatingInputTelefone"
-                                                placeholder="Telefone da Escola"
-                                            />
-                                            <label className="floatingInput">Telefone: <Astered>*</Astered></label>
-                                            {errors.telefone && <span className="error">{errors.telefone.message}</span>}
-                                        </div>
+                                                {/* Endereço */}
+                                                <div className="field col-12">
+                                                    <label htmlFor="endereco">Endereço</label>
+                                                    <InputText id="endereco" />
+                                                </div>
 
-                                        {/*campo estado*/}
-                                        <div className="form-floating mb-2">
-                                            <input
-                                                {...register("estado", {required: "O Estado é obrigatório"},)}
-                                                type="text"
-                                                className="form-control"
-                                                id="floatingInputEstado"
-                                                placeholder="uf"
-                                            />
-                                            <label className="floatingInPut">Estado: <Astered>*</Astered></label>
-                                            {errors.estado && <span className="error">{errors.estado.message}</span>}
-                                        </div>
+                                                {/* Cidade */}
+                                                <div className="field col-12 md:col-4">
+                                                    <label htmlFor="cidade">Cidade</label>
+                                                    <InputText id="cidade" />
+                                                </div>
 
-                                        {/*campo municipio*/}
-                                        <div className="form-floating mb-2">
-                                            <input
-                                                {...register("municipio", {required: "O município é obrigatório"},)}
-                                                type="text"
-                                                className="form-control"
-                                                id="floatingInputMunicipio"
-                                                placeholder="municipio"
-                                            />
-                                            <label className="floatingInput">Município: <Astered>*</Astered></label>
-                                            {errors.municipio && <span className="error">{errors.municipio.message}</span>}
-                                        </div>
+                                                {/* Estado */}
+                                                <div className="field col-12 md:col-4">
+                                                    <label htmlFor="estado">Estado</label>
+                                                    <Dropdown id="estado" options={estados} placeholder="Selecione" />
+                                                </div>
 
-                                        {/*campo bairro*/}
-                                        <div className="form-floating mb-2">
-                                            <input
-                                                {...register("bairro", {required: "O bairro é obrigatório"},)}
-                                                type="text"
-                                                className="form-control"
-                                                id="floatingInputBairro"
-                                                placeholder="bairro"
-                                            />
-                                            <label className="floatingInput">Bairro: <Astered>*</Astered></label>
-                                            {errors.bairro && <span className="error">{errors.bairro.message}</span>}
-                                        </div>
+                                                {/* CEP */}
+                                                <div className="field col-12 md:col-4">
+                                                    <label htmlFor="cep">CEP</label>
+                                                    <InputText id="cep" />
+                                                </div>
 
-                                        {/*campo endereco*/}
-                                        <div className="form-floating mb-2">
-                                            <input
-                                                {...register("logradouro", {required: "Rua ou avenida, o endereço é obrigatório"},)}
-                                                type="text"
-                                                className="form-control"
-                                                id="floatingInputLogradouro"
-                                                placeholder="Logradouro"
-                                            />
-                                            <label className="floatingInput">Logradouro: <Astered>*</Astered></label>
-                                            {errors.logradouro && <span className="error">{errors.logradouro.message}</span>}
-                                        </div>
+                                                {/* Data de nascimento */}
+                                                <div className="field col-12 md:col-6">
+                                                    <label htmlFor="dataNascimento">Data de Nascimento</label>
+                                                    <Calendar id="dataNascimento" showIcon dateFormat="dd/mm/yy" />
+                                                </div>
 
-                                        {/*campo complemento*/}
-                                        <div className="form-floating mb-2">
-                                            <input
-                                                {...register("complemento", {required: null},)}
-                                                type="text"
-                                                className="form-control"
-                                                id="floatingInputComplemento"
-                                                placeholder="complemento"
-                                            />
-                                            <label className="floatingInput">Complemento:</label>
-                                            {errors.complemento && <span className="error">{errors.complemento.message}</span>}
-                                        </div>
+                                                {/* CPF */}
+                                                <div className="field col-12 md:col-6">
+                                                    <label htmlFor="cpf">CPF</label>
+                                                    <InputText id="cpf" />
+                                                </div>
+
+                                                {/* Botão Enviar */}
+                                                <div className="field col-12">
+                                                    <Button label="Enviar" icon="pi pi-check" className="w-full" />
+                                                </div>
+                                            </div>
+                                        </FormLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                                         {/*botoes*/}
                                         <hr className="my-4"></hr>
@@ -191,7 +159,7 @@ function InfoBasicasEscola() {
                         </div>
                     </div>
                 </div>
-            </Layout>
+            </FormLayout>
         </>
     );
 }
@@ -226,3 +194,21 @@ export default InfoBasicasEscola;
            });
     }
 * */
+
+/**
+ * {/*campo endereco
+}
+*
+<div className="form-floating mb-2">
+    * <input
+    * {...register("logradouro", {required: "Rua ou avenida, o endereço é obrigatório"},)}
+    * type="text"
+    * className="form-control"
+    * id="floatingInputLogradouro"
+    * placeholder="Logradouro"
+    * />
+    * <label className="floatingInput">Logradouro: <Astered>*</Astered></label>
+    * {errors.logradouro && <span className="error">{errors.logradouro.message}</span>}
+    * </div>
+ *
+ * */
