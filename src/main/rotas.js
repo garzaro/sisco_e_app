@@ -4,7 +4,7 @@ import Navbar from "../components/navbar/navbar";
 import Home from '../pages/home';
 import Login from '../pages/login';
 import Register from '../pages/cadastro/register';
-import DefinirSenha from "../pages/senha/definir-senha";
+import DefinirSenha from "../pages/cadastro/definir-senha";
 import ConsultarEscola from "../pages/consultarEscola/consultar-escola";
 import InfoBasicasEscola from "../pages/cadastro/info-basicas-escola";
 import Infraestrutura from "../pages/cadastro/infraestrutura";
