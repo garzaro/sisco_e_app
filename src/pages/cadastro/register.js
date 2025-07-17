@@ -36,8 +36,14 @@ function Register () {
         salvarDadosFormulario(data);
         navigate('/definirsenha', {state: data});
     }
-    /*comparacao de email*/
+    /**
+     * comparacao de email
+     * */
     const confirmarEmail = watch('email');
+
+    /**
+     * existe coisa melhor mas fiz assim a mascara do cpf
+     * */
     const handleCpfMask = (e) => {
         const mascaraCpf = handleCpfChange(e.target.value);
         setValue('cpf', mascaraCpf);
