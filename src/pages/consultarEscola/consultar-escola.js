@@ -6,7 +6,7 @@ import FormLayout from "../../components/form/form-layout";
 const ConsultarEscola = () => {
     const { register, handleSubmit, formState: { errors }} = useForm({
         defaultValues: {
-            ano:'', codigo:'',
+            municipio:'', codigo:'',
         }
     });
     const consultar = () => {
@@ -24,21 +24,17 @@ const ConsultarEscola = () => {
                                     <FormLayout>
                                         <input
                                             type="text"
-                                            {...register("ano", {
-                                                required: "O campo ano é obrigatório",
-                                                minLength: {
-                                                    value: 4,
-                                                    message: "O ano deve ter 4 números"
-                                                }
+                                            {...register("municipio", {
+                                                required: "O campo município é obrigatório",
                                             })}
                                             className="form-control"
-                                            id="floatingInputAno"
-                                            placeholder="Digite o ano"
+                                            id="floatingInputMunicipio"
+                                            placeholder="Digite o município"
                                         />
                                         <label className="floatingInput">
-                                            Digite o ano <span className="asterisco-vermelho">*</span>
+                                            Digite o município <span className="asterisco-vermelho">*</span>
                                         </label>
-                                        {errors.ano && <span className="error">{errors.ano.message}</span>}
+                                        {errors.municipio && <span className="error">{errors.ano.message}</span>}
                                     </FormLayout>
                                     <FormLayout>
                                         <input
@@ -59,6 +55,7 @@ const ConsultarEscola = () => {
                                         </label>
                                         {errors.senha && <span className="error">{errors.senha.message}</span>}
                                     </FormLayout>
+
                                 </form>
                             </div>
                         </div>

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import {Link, useNavigate} from "react-router-dom";
-import {mensagemDeErro} from '../utils/toastr'
-import UsuarioService from "../app/service/usuarioService";
+import {mensagemDeErro} from '../components/utils/toastr'
+import UsuarioService from "../app/service/usuario-service";
 import FormLayout from "../components/form/form-layout";
 import Layout from "../components/layout/layout";
 import Swal from "sweetalert2";
@@ -83,7 +83,7 @@ function LoginForm () {
                                         </FormLayout>
                                         {/*esqueceu a senha*/}
                                         <div className="nav-signin-tooltip-footer link-info">Esqueceu a senha?
-                                            <a href="/register"
+                                            <a href="/cadastro/register"
                                                className="nav-a link-info"
                                                aria-label="Esqueceu a senha? Clique aqui para criar uma nova.">&nbsp;
                                                 Clique aqui.</a>
