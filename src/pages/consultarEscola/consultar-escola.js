@@ -1,6 +1,6 @@
 import React from "react";
 import {useForm} from "react-hook-form";
-import Layout from "../../components/layout/layout";
+import Layout from "../../components/form/layout";
 import FormLayout from "../../components/form/form-layout";
 
 const ConsultarEscola = () => {
