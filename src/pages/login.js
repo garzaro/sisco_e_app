@@ -30,13 +30,30 @@ function LoginForm () {
                 didOpen: () => {
                     Swal.showLoading()
                     Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
-                    //const barraDeProgresso = Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
-                    //barraDeProgresso.style.backgroundColor = '#3498db'
+                    const barraDeProgresso = Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
+                    barraDeProgresso.style.backgroundColor = '#3498db'
                 }
             })
             setTimeout(navigate("/home"), 2000);
-        }).catch(err => {
-            mensagemDeErro(err.response?.data);
+        }).catch((err) => {
+            const msg = err.response?.data || "Erro inesperado ao fazer login!";
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro ao fazer o login',
+                html: `<pre style="text-align: center; color: #e95e50; white-space: pre-wrap">${msg}</pre>`,
+                showConfirmButton: false,
+                timer: 3000,
+                scrollbarPadding: false,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading()
+                    Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
+                    const barraDeProgresso = Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
+                    if (barraDeProgresso){
+                        barraDeProgresso.style.backgroundColor = '#3498db'
+                    }
+                }
+            })
         });
     };
     const toggleVisibilidadeSenha = () => {
