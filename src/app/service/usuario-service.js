@@ -1,4 +1,4 @@
-import Apiservice from "../apiservice";
+import Apiservice from "../api/apiservice";
 
 const usuarioApi = Apiservice('/api/usuarios');
 
