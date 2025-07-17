@@ -59,11 +59,13 @@ const DefinirSenha = () => {
             Swal.fire({
                 icon: 'error',
                 title: 'Erro ao finalizar o cadastro',
-                html: `<pre style={text-align: left; white-space: pre-wrap}>${msg}</pre>`,
+                html: `<pre style="text-align: center; color: #e95e50; white-space: pre-wrap">${msg}</pre>`,
                 showConfirmButton: false,
-                timer: 5000,
+                timer: 4000,
                 scrollbarPadding: false,
                 timerProgressBar: true,
+                color: '#e95e50',
+                background: 'rgba(211,203,202,0.76)',
                 didOpen: () => {
                     Swal.showLoading()
                     Swal.getHtmlContainer().querySelector('.swal2-progress-bar')
