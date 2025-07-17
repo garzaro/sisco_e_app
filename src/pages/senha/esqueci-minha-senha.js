@@ -2,8 +2,8 @@ import {useState} from "react";
 import {useForm} from "react-hook-form";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
-import Card from "../components/card/card";
-import FormGroup from "../components/form/form-group";
+import Card from "../../components/card/card";
+import FormGroup from "../../components/form/form-group";
 
 
 const EsqueciMinhaSenha = () => {

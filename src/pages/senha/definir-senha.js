@@ -1,12 +1,12 @@
 import {useState} from "react";
 import {useForm} from "react-hook-form";
 import {Link, useLocation, useNavigate} from "react-router-dom";
-import {mensagemDeErroCadastro} from '../utils/toastr'
-import Layout from "../components/layout/layout";
-import UsuarioService from "../app/service/usuarioService";
+import {mensagemDeErroCadastro} from '../../components/utils/toastr'
+import Layout from "../../components/layout/layout";
+import UsuarioService from "../../app/service/usuario-service";
 import Swal from "sweetalert2";
-import AlterarVisualizarSenha from "../utils/visualizacaoSenhaTexto";
-import {validacaoSenhaTrim} from "../utils/utils";
+import AlterarVisualizarSenha from "../../components/utils/visualizarSenhaUtils";
+import {validacaoSenhaTrim} from "../../components/utils/utils";
 import ReactPasswordChecklist from "react-password-checklist";
 
 /*definir a senha e finalizar o cadastro*/
