@@ -1,171 +1,162 @@
-import React, {useEffect} from 'react';
-import {useForm, } from "react-hook-form";
-import {useNavigate} from "react-router-dom";
-import Astered from "../../css/astered";
-import FormLayout from "../../components/form/form-layout";
-import {InputText} from "primereact/inputtext";
+import React, {useEffect, useState} from 'react';
+import Layout from "../../components/form/layout";
+import FormGroup from "../../components/form/form-group";
+import {useForm} from "react-hook-form";
 import {Dropdown} from "primereact/dropdown";
-import {Calendar} from "primereact/calendar";
-import {Button} from "primereact/button";
+import {Card} from "primereact/card";
+import {Mention} from "primereact/mention";
+import {Link, useNavigate} from "react-router-dom";
+import {setDados} from "../../components/utils/storageUtils";
+import DropdownEstados from "../../components/select/selectEstados";
 
 function InfoBasicasEscola() {
-    const { register, handleSubmit, setValue, formState: { errors }} = useForm({
-        defaultValues: {
-            nome: '',
-            codigo: '',
-            email: '',
-            estado: '',
-            municipio: '',
-            bairro: '',
-            endereco: '',
-            telefone: '',
+    const { register, handleSubmit, watch, setValue, formState: { errors }} = useForm({
+        initialValues: {
+            escola: '',
         }
     });
+    const [estado, setEstado] = useState('')
     const navigate = useNavigate();
 
-    useEffect(() =>{
-        const dadosEscolaSalvo = localStorage.getItem('dadosEscola');
-        if(dadosEscolaSalvo){
-            Object.entries(JSON.parse(dadosEscolaSalvo)).forEach(([key, value]) => {
-                setValue(key, value);
-            });
-        }
-    }, [setValue]);
+    /**
+     * os dados do formulario serão salvos no localstorage
+     * e recuperados na tela de definicao de senha
+     * */
+    const handleAvancarEstrutura = (data) => {
 
-    const handleAvancar = (data) => {
-        localStorage.setItem('dadosEscola', JSON.stringify(data));
-        navigate('infraestrutura', {state: data});
+        console.log("VERIFICAR O ESTADO QUE VAI SER RECUPERADO ", data);
+        setDados(data);
+        navigate('/definirsenha', {state: data});
     }
 
-    function handleCancelar(){
-        navigate('/home')
-    }
-
+/*dropdown - primereact usar em cmpos de estado e municipio*/
     return (
         <>
-            <FormLayout>
-                <div>
-                    <div className="row">
-                        <div className="col-sm-8 col-md-7 col-lg-6 mx-auto">
-                            <div className="card border-0 bg-black text-secondary shadow rounded-3 my-1">
-                                <div className="card-body p-4 p-sm-5">
+        <Layout>
+            <div className="p-2"></div>
+            {/*col-12 md:col-6*/}
+            <form onSubmit={handleSubmit(handleAvancarEstrutura)}>
+                <fieldset className="border-5 shadow-5 rounded-1 p-4  ">
+                    <legend className="text-lg font-semibold px-4">Escola</legend>
+                    <div className="grid p-4 "> {/*flex flex-wrap - tailwind*/}
+                        {/*campo - nome da escola - primereact*/}
+                        <div className="col-12 md:col-6 md:w-30rem ">
+                            <FormGroup
+                                id="escola"
+                                name="escola"
+                                label="Escola"
+                                register={register}
+                                errors={errors}
+                                rules={{required: "Nome da escola é obrigatório" }}
+                                showAsterisk={true}
+                            />
+                        </div>
 
-                                    <h3 className="text-secondary my-1 text-center mb-3">Escola</h3> {/*card-title text-center mb-1 fw-light fs-6*/}
+                        {/*campo - codigo da escola*/}
+                        <div className="col-12 md:col-6 md:w-18rem">
+                            <FormGroup
+                                name="codigo"
+                                label="Código"
+                                register={register}
+                                errors={errors}
+                                rules={{required: 'Código é obrigatório'}}
+                                showAsterisk={true}
+                            />
+                        </div>
 
-                                    <form onSubmit={handleSubmit(handleAvancar)}>
-                                        <FormLayout>
-                                            <div className="p-fluid grid formgrid ">
-                                                {/* Nome */}
-                                                <div className="field col-12 md:col-6">
-                                                    <label htmlFor="nome">Nome</label>
-                                                    <InputText id="nome" />
-                                                </div>
+                        {/*campo - email da escola*/}
+                        <div className="col-12 md:col-6 md:w-20rem">
+                            <FormGroup
+                                name="email"
+                                label="e-mail"
+                                register={register}
+                                errors={errors}
+                                rules={{
+                                    required: 'E-mail é obrigatório',
+                                    pattern: {
+                                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                        message: 'E-mail inválido'
+                                    }
+                                }}
+                                showAsterisk={true}
+                                className="w-full"
+                            />
+                        </div>
 
-                                                {/* Sobrenome */}
-                                                <div className="field col-12 md:col-6">
-                                                    <label htmlFor="sobrenome">Sobrenome</label>
-                                                    <InputText id="sobrenome" />
-                                                </div>
+                        {/*campo - telefone*/}
+                        <div className="col-12 md:col-6 md:w-12rem">
+                            <FormGroup
+                                name="telefone"
+                                label="Telefone"
+                                register={register}
+                                errors={errors}
+                                rules={{required: 'Código é obrigatório'}}
+                                showAsterisk={true}
+                                className="w-full"
+                            />
+                        </div>
 
-                                                {/* E-mail */}
-                                                <div className="field col-12 md:col-6">
-                                                    <label htmlFor="email">Email</label>
-                                                    <InputText id="email" type="email" />
-                                                </div>
+                        {/*****************endereço****************/}
 
-                                                {/* Telefone */}
-                                                <div className="field col-12 md:col-6">
-                                                    <label htmlFor="telefone">Telefone</label>
-                                                    <InputText id="telefone" />
-                                                </div>
-
-                                                {/* Endereço */}
-                                                <div className="field col-12">
-                                                    <label htmlFor="endereco">Endereço</label>
-                                                    <InputText id="endereco" />
-                                                </div>
-
-                                                {/* Cidade */}
-                                                <div className="field col-12 md:col-4">
-                                                    <label htmlFor="cidade">Cidade</label>
-                                                    <InputText id="cidade" />
-                                                </div>
-
-                                                {/* Estado */}
-                                                <div className="field col-12 md:col-4">
-                                                    <label htmlFor="estado">Estado</label>
-                                                    <Dropdown id="estado" options={estados} placeholder="Selecione" />
-                                                </div>
-
-                                                {/* CEP */}
-                                                <div className="field col-12 md:col-4">
-                                                    <label htmlFor="cep">CEP</label>
-                                                    <InputText id="cep" />
-                                                </div>
-
-                                                {/* Data de nascimento */}
-                                                <div className="field col-12 md:col-6">
-                                                    <label htmlFor="dataNascimento">Data de Nascimento</label>
-                                                    <Calendar id="dataNascimento" showIcon dateFormat="dd/mm/yy" />
-                                                </div>
-
-                                                {/* CPF */}
-                                                <div className="field col-12 md:col-6">
-                                                    <label htmlFor="cpf">CPF</label>
-                                                    <InputText id="cpf" />
-                                                </div>
-
-                                                {/* Botão Enviar */}
-                                                <div className="field col-12">
-                                                    <Button label="Enviar" icon="pi pi-check" className="w-full" />
-                                                </div>
-                                            </div>
-                                        </FormLayout>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                        {/*botoes*/}
-                                        <hr className="my-4"></hr>
-                                        <div className="d-grid">
-                                            <button
-                                                className="btn btn-primary btn-login text-uppercase fw-bold" type="submit"
-                                            >
-                                                Avançar
-                                            </button>
-                                        <hr className="my-4"></hr>
-                                            <button
-                                                className="btn btn-outline-primary text-uppercase fw-bold"
-                                                onClick={handleCancelar}
-                                            >
-                                                Cancelar
-                                            </button>
-                                        </div>
-
-                                    </form>
-
-                                </div>
+                        <div className="col-12 md:col-12 " style={{ marginTop: '-22px' }}>
+                            <hr className="my-4"></hr>
+                            <div>
+                                <legend className="text-lg font-semibold ">Endereço</legend>
                             </div>
                         </div>
+
+                        {/**campos de endereço */}
+                        <div className="col-12 md:col-6">
+                            <DropdownEstados
+                              setValue={setValue}
+                              watch={watch}
+                              register={register}
+                              errors={errors}
+                              class
+                            />
+                        </div>
+
+                        <div className="col-12 md:col-6">
+                            <span className="p-float-label p-float-label-active">
+                                <Mention rows={4} cols={59}/>
+                                <label className="text-danger">Observações</label>
+                            </span>
+                        </div>
                     </div>
-                </div>
-            </FormLayout>
+
+                    {/*
+                    botao avancar
+                    */}
+                    <div className="grid m-3 mt-3" style={{ marginTop: '-25px' }}>
+                      <button type="submit" className="btn btn-primary text-bg-light-alpha-50 text-uppercase" >
+                        Avançar
+                      </button>
+                      {/*
+                      botao cancelar
+                      */}
+                      <Link
+                        className="btn btn-danger text-bg-light-alpha-50 text-uppercase" to="/home">
+                          Cancelar
+                      </Link>
+                    </div>
+                </fieldset>
+            </form>
+        </Layout>
+
+            <hr className="my-4"></hr>
+            <Card title="Título" footer={<span>Rodapé do Card</span>}>
+                <p>Conteúdo do card</p>
+            </Card>
+
         </>
+
     );
 }
+
 export default InfoBasicasEscola;
 
 /*
+InfoBasicasEscola
 * const escolaService = EscolaService();
 
     const salvarEscola = (data) => {
@@ -194,21 +185,24 @@ export default InfoBasicasEscola;
            });
     }
 * */
-
 /**
- * {/*campo endereco
-}
-*
-<div className="form-floating mb-2">
-    * <input
-    * {...register("logradouro", {required: "Rua ou avenida, o endereço é obrigatório"},)}
-    * type="text"
-    * className="form-control"
-    * id="floatingInputLogradouro"
-    * placeholder="Logradouro"
-    * />
-    * <label className="floatingInput">Logradouro: <Astered>*</Astered></label>
-    * {errors.logradouro && <span className="error">{errors.logradouro.message}</span>}
-    * </div>
+ * <form className="formgrid grid gap-3 grid-cols">
+ *                 <FormGroup
+ *                     name="escola"
+ *                     label="Escola"
+ *                     register={register}
+ *                     errors={errors}
+ *                     rules={{ required: 'Campo obrigatório' }}
+ *                     showAsterisk={true}
+ *                     className="col-12 md:col-6"
+ *                 />
+ *
+ *
+ *
+ *
+ *             </form>
+ *
+ *
+ *
  *
  * */
