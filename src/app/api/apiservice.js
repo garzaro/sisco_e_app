@@ -1,12 +1,17 @@
 import axios from "axios";
 
+console.log("API BAse URL: ", process.env.REACT_APP_API_URL);
+
 export const httpClient = axios.create({
-    baseURL: 'http://localhost:8080/',
+    baseURL: process.env.REACT_APP_API_URL,
+    headers: {
+        'Content-Type': 'application/json',
+    },
     withCredentials: true
-})
+});
 const ApiService = (apiurl) => {
     return {
-        apiurl: apiurl,
+
         post: (url, objeto) => {
             const requestUrl = `${apiurl}${url}`;
             return httpClient.post(requestUrl, objeto);
