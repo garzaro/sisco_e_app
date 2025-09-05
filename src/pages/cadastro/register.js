@@ -5,12 +5,10 @@ import Layout from "../../components/form/layout";
 import {handleCpfChange} from "../../components/utils/utils";
 
 /**
- * To-do
+ * To-do list
  * [] Service de usuario - persistencia
  * [x] Validar confirmação de email
  * [] Input confirmacao de email nao aceitar colagem
- * [] Mostrar senha - visualizacao
- * [] Mostrar senha - confirmação - visualizacao
  * [x] Navegacao entre pages
  * [x] Alerts - mensagem de erro no inputs
  * [x] Recuperacao de dados na tela de senha
@@ -159,6 +157,9 @@ function Register () {
                                     className="form-control"
                                     id="floatingInputConfirmacaoEmail"
                                     placeholder="Confirmar email"
+                                    onCopy={(e) => e.preventDefault()}
+                                    onCut={(e) => e.preventDefault()}
+                                    onPaste={(e) => e.preventDefault()}
                                 />
                                 <label className="floatingInput">
                                     Confirmar email
@@ -175,7 +176,9 @@ function Register () {
                             <div className="d-grid mt-4">
                                 <button
                                     className="btn btn-primary btn-login text-uppercase fw-bold"
-                                    type="submit">
+                                    type="submit"
+                                    onKeyPress={handleAvancar}
+                                >
                                     Avançar
                                 </button>
                             </div>
